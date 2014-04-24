@@ -1,0 +1,9 @@
+Package: fusedlasso
+Type: Package
+Title: fused lasso for least squares and logistic regression
+Version: 0.0
+Date: 2014-04-23
+Author: Jared Huling
+Maintainer: Jared Huling <jaredhuling@gmail.com>
+Description: An Efficient Algorithm for a Class of Fused Lasso Problems, Liu et al., 2010
+License: GPL3.0
