@@ -1,6 +1,8 @@
 fusedlasso
 ====
 
+WARNING: this is far from a finished product
+
 an R translation of the code for the Efficient Fused Lasso Algorithm in 
 
 _An Efficient Algorithm for a Class of Fused Lasso Problems_, Liu et al, 2010
