@@ -10,4 +10,4 @@ http://www.public.asu.edu/~jye02/Publications/Papers/rp589f-liu.pdf
 http://www.public.asu.edu/~jye02/Software/SLEP/index.htm
 
 
-C code by the aforementioned authors
+C code by the aforementioned authors (not me)
