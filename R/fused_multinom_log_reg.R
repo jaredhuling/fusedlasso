@@ -1,5 +1,5 @@
 
-fusedLassoLogistic <- function(x, y, lambda, class.weights = NULL, opts=NULL) {
+fusedLassoMultinomLogistic <- function(x, y, lambda, class.weights = NULL, opts=NULL) {
   
   sz <- dim(x)
   n <- sz[1]
@@ -193,7 +193,7 @@ fusedLassoLogistic <- function(x, y, lambda, class.weights = NULL, opts=NULL) {
     xbetap <- xbeta
     betabetap <- numeric(p)
     cp <- c; ccp <- 0
-
+    
     alphap <- 0; alpha <- 1
     
     for (iterStep in 1:opts$maxIter) {
@@ -219,9 +219,9 @@ fusedLassoLogistic <- function(x, y, lambda, class.weights = NULL, opts=NULL) {
       
       # compute prob=[p_1;p_2;...;p_n]
       prob <- 1 / (1 + exp(aa))
-
+      
       b <- -weighty * (1 - prob)
-
+      
       #the gradient of c
       gc <- sum(b) 
       
@@ -277,7 +277,7 @@ fusedLassoLogistic <- function(x, y, lambda, class.weights = NULL, opts=NULL) {
         
         fun.beta <- as.double( crossprod(weight, (log(exp(-bb) + exp(aa - bb)) + bb)) ) + 
           ( rsL2 / 2 ) * as.double(crossprod(beta))
-
+        
         r.sum <- (as.double(crossprod(v)) + (c - sc)^2) / 2
         l.sum <- fun.beta - fun.s - as.double(crossprod(v, g)) - (c - sc) * gc
         

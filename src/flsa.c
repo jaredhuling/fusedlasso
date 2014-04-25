@@ -109,12 +109,12 @@ void flsa(double *x, double *z, double *gap,
 		  int maxStep, double tol, int flag)
 */
 
-void R_flsa(double *x, double *z, double *infor, 
+void R_flsa(double *xnew, double *znew, double *infor, 
             double *lambda1, double *lambda2,
             int *n, int *maxStep, double *tol, 
-            int *tau, int *flag)
+            int *tau, int *flag, double *x, double *z)
 {
-  flsa(x, z, infor, x, z, 
+  flsa(xnew, znew, infor, x, z, 
        *lambda1, *lambda2, *n, 
        *maxStep, *tol, *tau, *flag);
 }

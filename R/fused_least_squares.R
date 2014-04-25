@@ -106,15 +106,15 @@ fusedLassoLS <- function(x, y, lambda, opts=NULL) {
     ####### This doesn't work yet
     #######
     invNu <- b / nu
-    mu.invNu <- mu * invNu
-    xb <- x %*% invNu - rep(mu.invNu, each = n)
+    mu.invNu <- as.double(crossprod(mu, invNu))
+    xb <- x %*% invNu - rep(mu.invNu, n)
   } else {
     #######
     ####### This doesn't work yet
     #######
-    xb <- (x %*% b - rep(mu * b, each = n)) / nu
+    mub <- as.double(crossprod(mu, b))
+    xb <- (x %*% b - rep(mub, n)) / nu
   }
-  
   if (opts$init == 0) {
     ## If .init=0, we set x=ratio*x by "initFactor"
     
@@ -214,13 +214,14 @@ fusedLassoLS <- function(x, y, lambda, opts=NULL) {
           ####### This doesn't work yet
           #######
           invNu <- b / nu
-          mu.invNu <- mu * invNu
-          xb <- x %*% invNu - rep(mu.invNu, each = n)
+          mu.invNu <- as.double(crossprod(mu, invNu))
+          xb <- x %*% invNu - rep(mu.invNu, n)
         } else {
           #######
           ####### This doesn't work yet
           #######
-          xb <- (x %*% b - rep(mu * b, each = n)) / nu
+          mub <- as.double(crossprod(mu, b))
+          xb <- (x %*% b - rep(mub, n)) / nu
         }
         
         xv <- xb - xs

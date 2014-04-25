@@ -149,13 +149,13 @@ Files contained in this header file sfa.h:
   The input variable z0 is not modified after calling sfa. For this sake, we allocate a new variable zz to replace z0.
 */
 
-void R_flsa(double *x, double *z, double *infor, 
+void R_flsa(double *xnew, double *znew, double *infor, 
             double *lambda1, double *lambda2,
             int *n, int *maxStep, double *tol, 
-            int *tau, int *flag);
+            int *tau, int *flag, double *x, double *z);
 
 void flsa(double *x, double *z, double *infor,
-		  double * v, double *z0, 
+		  double *v, double *z0, 
 		  double lambda1, double lambda2, int n, 
 		  int maxStep, double tol, int tau, int flag){
 
