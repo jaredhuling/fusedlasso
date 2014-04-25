@@ -17,7 +17,7 @@ C code by the aforementioned authors (not me)
 
 ## Installation
 
-**fusedlasso** is not available on CRAN, but can be installed using the R package **devtools**. **oem2** can be installed with the following R code:
+**fusedlasso** is not available on CRAN, but can be installed using the R package **devtools**. **fusedlasso** can be installed with the following R code:
 
 ```r
 devtools::install_github("jaredhuling/fusedlasso")
