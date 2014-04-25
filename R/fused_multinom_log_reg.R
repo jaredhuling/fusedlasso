@@ -1,5 +1,6 @@
 
-fusedLassoMultinomLogistic <- function(x, y, lambda, class.weights = NULL, opts=NULL) {
+fusedLassoMultinomLogistic <- function(x, y, lambda, groups = NULL, 
+                                       class.weights = NULL, opts=NULL) {
   
   sz <- dim(x)
   n <- sz[1]
@@ -19,47 +20,55 @@ fusedLassoMultinomLogistic <- function(x, y, lambda, class.weights = NULL, opts=
   #if ( any(sort(unique(y)) != c(-1, 1)) ) {
   #  stop("y must be in {-1, 1}")
   #}
+  opts.orig <- opts
   
-  # run sllOpts to set default values (flags)
-  opts <- sllOpts(opts)
-  
-  ## Set up options
-  if (opts$nFlag != 0) {
-    if (!is.null(opts$mu)) {
-      mu <- opts$mu
-      stopifnot(length(mu) == p)
-    } else {
-      mu <- colMeans(x)
-    }
-    
-    if (opts$nFlag == 1) {
-      if (!is.null(opts$nu)) {
-        nu <- opts$nu
-        stopifnot(length(nu) == p)
-      } else {
-        nu <- sqrt(colSums(x^2) / n)
-      }
-    }
-    
-    if (opts$nFlag == 2) {
-      if (!is.null(opts$nu)) {
-        nu <- opts$nu
-        stopifnot(length(nu) == n)
-      } else {
-        nu <- sqrt(rowSums(x^2) / p)
-      }
-    }
-    
-    ## If some values of nu are small, it might
-    ## be that the entries in a given row or col
-    ## of x are all close to zero. For numerical 
-    ## stability, we set these values to 1.
-    ind.zero <- which(abs(nu) <= 1e-10)
-    nu[ind.zero] <- 1
-    
+  # if groups are given, get unique groups
+  if (!is.null(groups)) {
+    unique.groups <- sort(unique(groups[!is.na(groups)]))
   }
   
   for (k in 1:K) {
+    
+    # run sllOpts to set default values (flags)
+    opts <- sllOpts(opts.orig)
+    
+    ## Set up options
+    if (opts$nFlag != 0) {
+      if (!is.null(opts$mu)) {
+        mu <- opts$mu
+        stopifnot(length(mu) == p)
+      } else {
+        mu <- colMeans(x)
+      }
+      
+      if (opts$nFlag == 1) {
+        if (!is.null(opts$nu)) {
+          nu <- opts$nu
+          stopifnot(length(nu) == p)
+        } else {
+          nu <- sqrt(colSums(x^2) / n)
+        }
+      }
+      
+      if (opts$nFlag == 2) {
+        if (!is.null(opts$nu)) {
+          nu <- opts$nu
+          stopifnot(length(nu) == n)
+        } else {
+          nu <- sqrt(rowSums(x^2) / p)
+        }
+      }
+      
+      ## If some values of nu are small, it might
+      ## be that the entries in a given row or col
+      ## of x are all close to zero. For numerical 
+      ## stability, we set these values to 1.
+      ind.zero <- which(abs(nu) <= 1e-10)
+      nu[ind.zero] <- 1
+      
+    }
+    
+
     
     #code current y as 1 and -1
     y.k <- 2 * (y.f == classes[k]) - 1
@@ -263,11 +272,48 @@ fusedLassoMultinomLogistic <- function(x, y, lambda, class.weights = NULL, opts=
           v <- s - g / L
           c <- sc - gc / L
           
-          res <- flsa(v, z0, lambda / L, lambda2 / L, p,
-                      1000, 1e-8, 1, 6)
-          beta <- res[[1]]
-          z0 <- res[[2]]
-          infor <- res[[3]]
+          if (is.null(groups)) {
+            res <- flsa(v, z0, lambda / L, lambda2 / L, p,
+                        1000, 1e-8, 1, 6)
+            beta <- res[[1]]
+            z0 <- res[[2]]
+            infor <- res[[3]]
+          } else {
+            
+            if (any(is.na(groups))) {
+              ## don't apply fused lasso penalty
+              ## to variables with group == NA 
+              gr.idx <- which(is.na(groups))
+              gr.p <- length(gr.idx)
+              if (any(gr.idx == 1)) {
+                gr.idx.z <- gr.idx[gr.idx != 1] - 1
+              } else {
+                gr.idx.z <- gr.idx[-gr.p]
+              }
+              
+              res <- flsa(v[gr.idx], z0[gr.idx.z], lambda / L, 0, gr.p,
+                          1000, 1e-8, 1, 6)
+              beta[gr.idx] <- res[[1]]
+              z0[gr.idx.z] <- res[[2]]
+              infor <- res[[3]]
+            }
+            
+            for (t in 1:length(unique.groups)) {
+              gr.idx <- which(groups == unique.groups[t])
+              gr.p <- length(gr.idx)
+              if (any(gr.idx == 1)) {
+                gr.idx.z <- gr.idx[gr.idx != 1] - 1
+              } else {
+                gr.idx.z <- gr.idx[-gr.p]
+              }
+            
+              res <- flsa(v[gr.idx], z0[gr.idx.z], lambda / L, lambda2 / L, gr.p,
+                          1000, 1e-8, 1, 6)
+              beta[gr.idx] <- res[[1]]
+              z0[gr.idx.z] <- res[[2]]
+              infor <- res[[3]]
+            }
+          }
           
           # the difference between the new approximate 
           # solution x and the search point s
