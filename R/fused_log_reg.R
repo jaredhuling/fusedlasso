@@ -1,5 +1,5 @@
 
-fusedLassoLogistic <- function(x, y, lambda, class.weights = NULL, opts=NULL) {
+fusedLogisticR <- function(x, y, lambda, class.weights = NULL, opts=NULL) {
   
   sz <- dim(x)
   n <- sz[1]

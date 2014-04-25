@@ -1,6 +1,6 @@
 
 
-fusedLassoLS <- function(x, y, lambda, opts=NULL) {
+fusedLeastR <- function(x, y, lambda, opts=NULL) {
   
   # Function fusedLeastR
   #      Least Squares Loss with the Fused Lasso Penalty

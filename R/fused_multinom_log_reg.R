@@ -1,6 +1,6 @@
 
-fusedLassoMultinomLogistic <- function(x, y, lambda, groups = NULL, 
-                                       class.weights = NULL, opts=NULL) {
+fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL, 
+                                     class.weights = NULL, opts=NULL) {
   
   sz <- dim(x)
   n <- sz[1]
