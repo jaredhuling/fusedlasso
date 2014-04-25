@@ -17,7 +17,7 @@ fusedLassoLS <- function(x, y, lambda, opts=NULL) {
   sz <- dim(x)
   n <- sz[1]
   p <- sz[2]
-  
+
   stopifnot(lambda > 0)
   
   # run sllOpts to set default values (flags)
@@ -110,6 +110,7 @@ fusedLassoLS <- function(x, y, lambda, opts=NULL) {
 
   }
   
+  
   ## compute x b
   if (opts$nFlag == 0) {
     xb <- x %*% b
@@ -164,7 +165,7 @@ fusedLassoLS <- function(x, y, lambda, opts=NULL) {
     
     ## assign bp with b, and xbp with xb
     bp <- b; xbp <- xb; bbp <- numeric(p)
-    
+        
     ## alphap and alpha are used for computing the weight in forming search point
     alphap <- 0; alpha <- 1;
     
