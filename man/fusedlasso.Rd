@@ -11,9 +11,9 @@ fusedlasso(x, y, lambda.lasso = 0, lambda.fused = 0, groups = NULL,
   column corresponds to a covariate}
 
   \item{y}{response vector of length nobs. numeric if
-  family == "gaussian", vector in \{-1, 1\} if family ==
-  "binomial", vector with values in \{1, 2, ..., k\} if
-  family == "multinomial"}
+  \code{family == "gaussian"}, vector in \{-1, 1\} if
+  \code{family == "binomial"}, vector with values in \{1,
+  2, ..., k\} if \code{family == "multinomial"}}
 
   \item{lambda.lasso}{tuning parameter for lasso penalty}
 
@@ -23,17 +23,21 @@ fusedlasso(x, y, lambda.lasso = 0, lambda.fused = 0, groups = NULL,
   \item{groups}{vector which defines the grouping of the
   variables for which to apply the fused lasso penalty.
   Components sharing the same number build a group.
-  Non-fused-lasso-penalized coefﬁcients are marked with
-  NA. Currently only works for family == "multinomial"}
+  Non-fused-lasso-penalized coefficients are marked with
+  NA. Currently only works for \code{family ==
+  "multinomial"}}
 
   \item{family}{"gaussian" for linear regression,
   "binomial" for logistic regression, "multinomial" for
   multinomial logistic regression}
 
-  \item{opts}{options as defined by sllOpts() function}
+  \item{opts}{options as defined by \code{sllOpts()}
+  function}
 }
 \value{
-An object with S3 class ""
+\itemize{ \item{\code{beta}} {p vector (or K x p matrix) of
+estimated coefficients} \item{\code{intercept}} {estimated
+intercept} }
 }
 \description{
 Efficient Fused Lasso Algorithm (EFLA)

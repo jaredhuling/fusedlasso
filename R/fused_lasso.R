@@ -2,15 +2,20 @@
 #' Efficient Fused Lasso Algorithm (EFLA) 
 #'
 #' @param x input matrix. Each row is an observation, each column corresponds to a covariate
-#' @param y response vector of length nobs. numeric if family == "gaussian", vector in \{-1, 1\} if family == "binomial", 
-#' vector with values in \{1, 2, ..., k\} if family == "multinomial"
+#' @param y response vector of length nobs. numeric if \code{family == "gaussian"}, vector in \{-1, 1\} if \code{family == "binomial"}, 
+#' vector with values in \{1, 2, ..., k\} if \code{family == "multinomial"}
 #' @param lambda.lasso tuning parameter for lasso penalty
 #' @param lambda.fused tuning parameter for fused lasso penalty
 #' @param groups vector which defines the grouping of the variables for which to apply the fused lasso penalty. Components sharing the
-#' same number build a group. Non-fused-lasso-penalized coefﬁcients are marked with NA. Currently only works for family == "multinomial"
+#' same number build a group. Non-fused-lasso-penalized coefficients are marked with NA. 
+#' Currently only works for \code{family == "multinomial"}
 #' @param family "gaussian" for linear regression, "binomial" for logistic regression, "multinomial" for multinomial logistic regression
-#' @param opts options as defined by sllOpts() function
-#' @return An object with S3 class "" 
+#' @param opts options as defined by \code{sllOpts()} function
+#' @return 
+#' \itemize{
+#'  \item{\code{beta}} {p vector (or K x p matrix) of estimated coefficients}
+#'  \item{\code{intercept}} {estimated intercept}
+#' }
 #' @references \emph{An Efficient Algorithm for a Class of Fused Lasso Problems}, Liu et al. 2010 
 #' http://www.public.asu.edu/~jye02/Publications/Papers/rp589f-liu.pdf
 #' 
