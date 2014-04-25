@@ -12,6 +12,8 @@ fusedLassoMultinomLogistic <- function(x, y, lambda, class.weights = NULL, opts=
   classes <- levels(y.f)
   K <- length(classes)
   
+  betas <- array(NA, dim = c(K, p))
+  intercepts <- numeric(K)
   
   stopifnot(lambda > 0)
   #if ( any(sort(unique(y)) != c(-1, 1)) ) {
@@ -381,7 +383,9 @@ fusedLassoMultinomLogistic <- function(x, y, lambda, class.weights = NULL, opts=
     } else {
       stop("This function only supports opts.mFlag=0 & opts.lFlag=0")
     }
+    betas[k, ] <- drop(beta)
+    intercepts[k] <- c
   }
   
-  list(beta = drop(beta), intercept = c, funVal = funVal, ValueL = ValueL)
+  list(beta = betas, intercept = intercepts, funVal = funVal, ValueL = ValueL)
 }
