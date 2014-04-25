@@ -1,7 +1,7 @@
 fusedlasso
 ====
 
-WARNING: this is far from a finished product
+__WARNING:__ this is far from a finished product
 
 an R translation of the code for the Efficient Fused Lasso Algorithm in 
 
