@@ -8,8 +8,7 @@ fusedlasso <- function(x, y, lambda.lasso = 0, lambda.fused = 0, groups = NULL,
   colM <- colMeans(x)
   p <- ncol(x)
   n <- nrow(x)
-  lambda.lasso <- lambda.lasso * sqrt(n)
-  lambda.fused <- lambda.fused * sqrt(n)
+
   x.tilde <- x - matrix(rep(colM, n), ncol=p, byrow=TRUE)
   if (is.null(opts)) {
     opts <- sllOpts()

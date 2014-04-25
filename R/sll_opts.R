@@ -134,6 +134,17 @@ sllOpts <- function(opts = list()) {
     opts$maxIter <- 10000
   }
   
+  if (!is.null(opts$tol)) {
+    if (opts$tol > 1e-1) {
+      opts$tol <- 1e-1
+    }
+    if (opts$tol < 0) {
+      opts$tol <- 1e-15
+    }
+  } else {
+    opts$tol <- 1e-12
+  }
+  
   if (!is.null(opts$tFlag)) {
     if (opts$tFlag < 0) {
       opts$tFlag <- 0
