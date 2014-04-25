@@ -1,6 +1,6 @@
 
 
-fusedlasso <- function(x, y, lambda.lasso = 0, lambda.fused = 0, groups = NULL
+fusedlasso <- function(x, y, lambda.lasso = 0, lambda.fused = 0, groups = NULL,
                        family = c("gaussian", "binomial", "multinomial"), 
                        opts = NULL, class.weights = NULL) {
   family <- match.arg(family)
