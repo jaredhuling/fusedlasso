@@ -13,3 +13,36 @@ http://www.public.asu.edu/~jye02/Software/SLEP/index.htm
 
 
 C code by the aforementioned authors (not me)
+
+
+## Installation
+
+**fusedlasso** is not available on CRAN, but can be installed using the R package **devtools**. **oem2** can be installed with the following R code:
+
+```r
+devtools::install_github("jaredhuling/fusedlasso")
+library(fusedlasso)
+```
+
+## Example
+
+```r
+nobs <- 10000
+nvars <- 50
+
+set.seed(123)
+true.beta <- rnorm(nvars) * rbinom(nvars, 1, 0.25)
+true.beta[1:3] <- c(1, 1.06, 0.95)
+x <- matrix(rnorm(nobs * nvars), ncol = nvars)
+
+
+log.p.ratio <- x %*% true.beta
+prob.y.1 <- 1 / (1 + exp(-log.p.ratio))
+y <- rbinom(nobs, 1, prob = prob.y.1)
+y1 <- ifelse(y == 0, -1, y)
+
+
+system.time(res <- fusedlasso(x, y1, lambda.lasso = 0.005, lambda.fused = 0.01, family = "binomial"))
+round(res$beta, 5)
+
+```
