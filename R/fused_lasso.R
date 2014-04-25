@@ -3,10 +3,13 @@
 fusedlasso <- function(x, y, lambda.lasso = 0, lambda.fused = 0, groups = NULL,
                        family = c("gaussian", "binomial", "multinomial"), 
                        opts = NULL, class.weights = NULL) {
+  
   family <- match.arg(family)
   colM <- colMeans(x)
   p <- ncol(x)
   n <- nrow(x)
+  lambda.lasso <- lambda.lasso * sqrt(n)
+  lambda.fused <- lambda.fused * sqrt(n)
   x.tilde <- x - matrix(rep(colM, n), ncol=p, byrow=TRUE)
   if (is.null(opts)) {
     opts <- sllOpts()
@@ -17,6 +20,11 @@ fusedlasso <- function(x, y, lambda.lasso = 0, lambda.fused = 0, groups = NULL,
     res <- fusedLeastR(x = x.tilde, y = y, lambda = lambda.lasso, opts = opts)
     res$intercept <- mean(y)
   } else if (family == "binomial") {
+    
+    if (any(sort(unique(y)) != c(-1, 1) )) {
+      stop ("y must take values {-1, 1}")
+    }
+    
     res <- fusedLogisticR(x = x.tilde, y, lambda = lambda.lasso, 
                           class.weights = class.weights, opts = opts)
   } else if (family == "multinomial") {
