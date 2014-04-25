@@ -2,6 +2,18 @@
 
 fusedLassoLS <- function(x, y, lambda, opts=NULL) {
   
+  # Function fusedLeastR
+  #      Least Squares Loss with the Fused Lasso Penalty
+  #
+  ## Problem
+  #
+  #  min  1/2 || X b - y||^2  + lambda * ||b||_1 +   lambda_2 ||Rb||_1
+  #                               ## + 1/2 rsL2 * ||b||_2^2
+  #
+  #  ##By default, rsL2=0.
+  #  ##When rsL2 is nonzero, this correspons the well-know elastic net.
+  #
+  
   sz <- dim(x)
   n <- sz[1]
   p <- sz[2]
@@ -102,16 +114,10 @@ fusedLassoLS <- function(x, y, lambda, opts=NULL) {
   if (opts$nFlag == 0) {
     xb <- x %*% b
   } else if (opts$nFlag == 1) {
-    #######
-    ####### This doesn't work yet
-    #######
     invNu <- b / nu
     mu.invNu <- as.double(crossprod(mu, invNu))
     xb <- x %*% invNu - rep(mu.invNu, n)
   } else {
-    #######
-    ####### This doesn't work yet
-    #######
     mub <- as.double(crossprod(mu, b))
     xb <- (x %*% b - rep(mub, n)) / nu
   }
@@ -210,16 +216,10 @@ fusedLassoLS <- function(x, y, lambda, opts=NULL) {
         if (opts$nFlag == 0) {
           xb <- x %*% b
         } else if (opts$nFlag == 1) {
-          #######
-          ####### This doesn't work yet
-          #######
           invNu <- b / nu
           mu.invNu <- as.double(crossprod(mu, invNu))
           xb <- x %*% invNu - rep(mu.invNu, n)
         } else {
-          #######
-          ####### This doesn't work yet
-          #######
           mub <- as.double(crossprod(mu, b))
           xb <- (x %*% b - rep(mub, n)) / nu
         }
@@ -318,7 +318,7 @@ fusedLassoLS <- function(x, y, lambda, opts=NULL) {
     if (opts$nFlag == 0) {
       xTxb <- crossprod(x, xb)
     } else if (opts$nFlag == 1) {
-      xTxb <- (crossprod(x, xb) = sum(xb) * mu) / nu
+      xTxb <- (crossprod(x, xb) - sum(xb) * mu) / nu
     } else {
       invNu <- ab / nu
       xTxb <- crossprod(x, invNu) - sum(invNu) * mu
@@ -362,19 +362,15 @@ fusedLassoLS <- function(x, y, lambda, opts=NULL) {
         if (opts$nFlag == 0) {
           xbnew <- x %*% bnew
         } else if (opts$nFlag == 1) {
-          #######
-          ####### This doesn't work yet
-          #######
           invNu <- bnew / nu
-          mu.invNu <- mu * invNu
-          xbnew <- x %*% invNu - rep(mu.invNu, each = n)
+          mu.invNu <- as.double(crossprod(mu * invNu))
+          xbnew <- x %*% invNu - rep(mu.invNu, n)
         } else {
-          #######
-          ####### This doesn't work yet
-          #######
-          xbnew <- (x %*% bnew - rep(mu * b, each = n)) / nu
+          mub <- as.double(crossprod(mu, b))
+          xbnew <- (x %*% bnew - rep(mub, n)) / nu
         } 
         
+        xb <- xbnew
         # compute xT xb
         if (opts$nFlag == 0) {
           xTxb <- crossprod(x, xb)
