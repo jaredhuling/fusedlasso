@@ -261,6 +261,8 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       #b <- -weighty * (1 - prob)
       b <- ((y.mat+1)/2 - prob) 
       
+      print(b)
+      
       #the gradient of c
       gc <- colSums(y.mat+1)/2 - n 
       
@@ -278,6 +280,8 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       #add the squared L2 norm regularization term
       g <- g + rsL2 * s
       
+      print(g)
+      
       #assignments
       betap <- beta
       xbetap <- xbeta
@@ -291,7 +295,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         
         print(v)
         print(z0)
-        print(g)
+        
         
         for (k in 1:K) {
           if (is.null(groups)) {
