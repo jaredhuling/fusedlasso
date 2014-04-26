@@ -270,19 +270,19 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       #prob <- 1 / (1 + exp(aa))
       prob <- exp(aa)
       
-      fun.s <- -sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(prob * weight) )) + 
+      fun.s <- sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(prob * weight) )) + 
         ( rsL2 / 2 ) * sum(as.double(crossprod(s)))
       
       prob <- prob / rowSums(prob)
       
       #b <- -weighty * (1 - prob)
-      b <- ((y.mat+1)/2 - prob) / n
+      b <- ((y.mat+1)/2 - prob) * weight
       
       print("b")
       print(b[1:10,])
       
       #the gradient of c
-      gc <- (colSums(y.mat+1)/(2) - 1)/n
+      gc <- (colSums(y.mat+1)/(2) - 1) / n
       
       #  should be sum i=1:n { sum k=1:K {y_i^(k)} - p_ij} 
       
@@ -393,7 +393,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         #fun.beta <- as.double( crossprod(weight, (log(exp(-bb) + exp(aa - bb)) + bb)) ) + 
         #  ( rsL2 / 2 ) * as.double(crossprod(beta))
         
-        fun.beta <- -sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(prob * weight) )) + 
+        fun.beta <- sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(prob * weight) )) + 
           ( rsL2 / 2 ) * sum(as.double(crossprod(beta)))
         
         #r.sum <- (as.double(crossprod(v)) + (c - sc)^2) / 2
