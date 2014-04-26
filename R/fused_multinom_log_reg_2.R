@@ -282,7 +282,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       print(b[1:10,])
       
       #the gradient of c
-      gc <- colSums(y.mat+1)/(2*n) - 1 
+      gc <- (colSums(y.mat+1)/(2) - 1)/n
       
       #  should be sum i=1:n { sum k=1:K {y_i^(k)} - p_ij} 
       
@@ -400,6 +400,8 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         #l.sum <- fun.beta - fun.s - as.double(crossprod(v, g)) - (c - sc) * gc
         r.sum <- (as.double(crossprod(as.vector(v))) + sum((c - sc)^2)) / 2
         l.sum <- fun.beta - fun.s - sum(as.double(crossprod(v, g))) - sum((c - sc) * gc)
+        
+        cat("r.sum: ", r.sum, "l.sum: ", l.sum, "fun.beta: ", fun.beta, "fun.s: ", fun.s)
         
         if (r.sum <= 1e-18) {
           #this shows that the gradient step makes little improvement
