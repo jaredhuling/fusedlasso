@@ -262,7 +262,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       b <- ((y.mat+1)/2 - prob) 
       
       #the gradient of c
-      gc <- colSums(y+1)/2 - n 
+      gc <- colSums(y.mat+1)/2 - n 
       
       #  should be sum i=1:n { sum k=1:K {y_i^(k)} - p_ij} 
       
