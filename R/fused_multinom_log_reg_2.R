@@ -291,6 +291,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         
         print(v)
         print(z0)
+        print(g)
         
         for (k in 1:K) {
           if (is.null(groups)) {
