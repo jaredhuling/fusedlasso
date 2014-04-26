@@ -241,7 +241,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       xs <- xbeta + bet * (xbeta - xbetap)
       
       #aa <- -y.k * (xs + sc)
-      aa <- (xs + rep(sc, each = n))
+      aa <- (xs + rep(sc, each = n)) / n
       print("aa")
       print(aa[1:10,])
       
@@ -267,13 +267,13 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       print(b[1:10,])
       
       #the gradient of c
-      gc <- colSums(y.mat+1)/2 - n 
+      gc <- colSums(y.mat+1)/(2*n) - 1 
       
       #  should be sum i=1:n { sum k=1:K {y_i^(k)} - p_ij} 
       
       #compute g= xT b, the gradient of beta
       if (opts$nFlag == 0) {
-        g <- crossprod(x, b)
+        g <- crossprod(x, b) / n
       } else if (opts$nFlag == 1) {
         g <- (crossprod(x, b) - colSums(b) * mu) / nu
       } else {
