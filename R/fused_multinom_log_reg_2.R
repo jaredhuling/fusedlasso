@@ -289,6 +289,9 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         v <- s - g / L
         c <- sc - gc / L
         
+        print(v)
+        print(z0)
+        
         for (k in 1:K) {
           if (is.null(groups)) {
             res <- flsa(v[, k], z0[, k], lambda / L, lambda2 / L, p,
