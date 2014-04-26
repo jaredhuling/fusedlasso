@@ -242,6 +242,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       
       #aa <- -y.k * (xs + sc)
       aa <- (xs + rep(sc, each = n))
+      print(aa[1:10,])
       
       # fun.s is the logistic loss at the search point
       #bb <- pmax(aa, 0)
@@ -261,7 +262,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       #b <- -weighty * (1 - prob)
       b <- ((y.mat+1)/2 - prob) 
       
-      print(b)
+      print(b[1:10,])
       
       #the gradient of c
       gc <- colSums(y.mat+1)/2 - n 
