@@ -95,22 +95,22 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
   # See the definition of the problem above.
   # The summation of the weights for all the samples equals to 1.
   p.flag <- (y.mat == 1)
-  #if (!is.null(class.weights)) {
-  #  sWeight <- class.weights
-  #  
-  #  if (length(class.weights) != 2 || class.weights[1] <= 0 || class.weights[2] <= 0) {
-  #    stop("class weights must contain 2 positive values")
-  #  }
-  #  
-  #  weight <- numeric(n)
-  #  
-  #  m1 <- sum(p.flag) * sWeight[1]
-  #  m2 <- sum(!p.flag) * sWeight[2]
-  #  weight[which(p.flag)] <- sWeight[1] / (m1 + m2)
-  #  weight[which(!p.flag)] <- sWeight[2] / (m1 + m2)
-  #} else {
-  #  weight <- rep(1, n) / n
-  #}
+  if (!is.null(class.weights)) {
+   sWeight <- class.weights
+   
+   if (length(class.weights) != 2 || class.weights[1] <= 0 || class.weights[2] <= 0) {
+     stop("class weights must contain 2 positive values")
+   }
+   
+   weight <- numeric(n)
+   
+   m1 <- sum(p.flag) * sWeight[1]
+   m2 <- sum(!p.flag) * sWeight[2]
+   weight[which(p.flag)] <- sWeight[1] / (m1 + m2)
+   weight[which(!p.flag)] <- sWeight[2] / (m1 + m2)
+  } else {
+   weight <- array(1, dim = c(n, K)) / n
+  }
   
   ## L2 norm regularization
   if (!is.null(opts$rsL2)) {
@@ -123,7 +123,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
   }
   
   #m1 <- sum(weight[which(p.flag)])
-  m1 <- colSums(p.flag) / n
+  m1 <- colSums(p.flag * weight)
   m2 <- 1 - m1
   
   ## L1 norm regularization
@@ -136,7 +136,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
     b <- array(0, dim = c(n, K))
     b[which(p.flag)] <- m2
     b[which(!p.flag)] <- -m1
-    #b <- b * weight
+    b <- b * weight
     #b <- b / n
     
     ## compute xTb
@@ -270,7 +270,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       #prob <- 1 / (1 + exp(aa))
       prob <- exp(aa)
       
-      fun.s <- -(sum(((y.mat + 1) / 2) * aa) - sum(log( rowSums(prob) ))) / n + 
+      fun.s <- -sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(prob * weight) )) + 
         ( rsL2 / 2 ) * sum(as.double(crossprod(s)))
       
       prob <- prob / rowSums(prob)
@@ -393,7 +393,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         #fun.beta <- as.double( crossprod(weight, (log(exp(-bb) + exp(aa - bb)) + bb)) ) + 
         #  ( rsL2 / 2 ) * as.double(crossprod(beta))
         
-        fun.beta <- -(sum(((y.mat + 1) / 2) * aa) - sum(log( rowSums(exp(aa)) ))) / n + 
+        fun.beta <- -sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(prob * weight) )) + 
           ( rsL2 / 2 ) * sum(as.double(crossprod(beta)))
         
         #r.sum <- (as.double(crossprod(v)) + (c - sc)^2) / 2
