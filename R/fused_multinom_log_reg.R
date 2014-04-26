@@ -24,7 +24,21 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
   
   # if groups are given, get unique groups
   if (!is.null(groups)) {
-    unique.groups <- sort(unique(groups[!is.na(groups)]))
+    unique.groups <- vector(mode = "list", length == K)
+    if (is.list(groups)) {
+      if (length(groups) != K) {
+        stop("Group list but have one element per class")
+      }
+      
+      for (k in 1:K) {
+        unique.groups[[k]] <- sort(unique(groups[!is.na(groups[[k]])]))
+      }
+    } else {
+      unique.groups[1:K] <- sort(unique(groups[!is.na(groups)]))
+      gr.list <- vector(mode = "list", length = K)
+      gr.list[1:K] <- groups
+      groups <- gr.list
+    }
   }
   
   for (k in 1:K) {
@@ -280,10 +294,10 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
             infor <- res[[3]]
           } else {
             
-            if (any(is.na(groups))) {
+            if (any(is.na(groups[[k]]))) {
               ## don't apply fused lasso penalty
               ## to variables with group == NA 
-              gr.idx <- which(is.na(groups))
+              gr.idx <- which(is.na(groups[[k]]))
               gr.p <- length(gr.idx)
               if (any(gr.idx == 1)) {
                 gr.idx.z <- gr.idx[gr.idx != 1] - 1
@@ -298,8 +312,8 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
               infor <- res[[3]]
             }
             
-            for (t in 1:length(unique.groups)) {
-              gr.idx <- which(groups == unique.groups[t])
+            for (t in 1:length(unique.groups[[k]])) {
+              gr.idx <- which(groups[[k]] == unique.groups[[k]][t])
               gr.p <- length(gr.idx)
               if (any(gr.idx == 1)) {
                 gr.idx.z <- gr.idx[gr.idx != 1] - 1
