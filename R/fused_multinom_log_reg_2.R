@@ -242,6 +242,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       
       #aa <- -y.k * (xs + sc)
       aa <- (xs + rep(sc, each = n))
+      print("aa")
       print(aa[1:10,])
       
       # fun.s is the logistic loss at the search point
@@ -262,6 +263,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       #b <- -weighty * (1 - prob)
       b <- ((y.mat+1)/2 - prob) 
       
+      print("b")
       print(b[1:10,])
       
       #the gradient of c
@@ -281,6 +283,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       #add the squared L2 norm regularization term
       g <- g + rsL2 * s
       
+      print("g")
       print(g)
       
       #assignments
@@ -294,7 +297,8 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         v <- s - g / L
         c <- sc - gc / L
         
-        print(v)
+        print("v")
+        print(v); print("z0")
         print(z0)
         
         
@@ -360,7 +364,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         }
         
         #aa <- -y.k * (xbeta + c)
-        aa <- -y.mat * (xbeta + rep(c, each = n))
+        aa <- (xbeta + rep(c, each = n))
         
         # fun.beta is the logistic loss at the new approximate solution
         bb <- pmax(aa, 0)
