@@ -347,9 +347,15 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
           }
         } #end loop over classes
         
+        print("beta")
+        print(beta[1:15,])
+        
         # the difference between the new approximate 
         # solution x and the search point s
         v <- beta - s
+        
+        print("s")
+        print(s[1:15,])
         
         ## Compute x beta
         if (opts$nFlag == 0) {
