@@ -393,7 +393,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         #fun.beta <- as.double( crossprod(weight, (log(exp(-bb) + exp(aa - bb)) + bb)) ) + 
         #  ( rsL2 / 2 ) * as.double(crossprod(beta))
         
-        fun.beta <- sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(prob * weight) )) + 
+        fun.beta <- sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(exp(aa) * weight) )) + 
           ( rsL2 / 2 ) * sum(as.double(crossprod(beta)))
         
         #r.sum <- (as.double(crossprod(v)) + (c - sc)^2) / 2
