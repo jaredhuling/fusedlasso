@@ -137,7 +137,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
     b[which(p.flag)] <- m2
     b[which(!p.flag)] <- -m1
     #b <- b * weight
-    b <- b / n
+    #b <- b / n
     
     ## compute xTb
     if (opts$nFlag == 0) {
@@ -270,7 +270,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       #prob <- 1 / (1 + exp(aa))
       prob <- exp(aa)
       
-      fun.s <- sum(((y.mat + 1) / 2) * aa) - sum(log( rowSums(prob) )) / n + 
+      fun.s <- (sum(((y.mat + 1) / 2) * aa) - sum(log( rowSums(prob) ))) / n + 
         ( rsL2 / 2 ) * sum(as.double(crossprod(s)))
       
       prob <- prob / rowSums(prob)
@@ -393,7 +393,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         #fun.beta <- as.double( crossprod(weight, (log(exp(-bb) + exp(aa - bb)) + bb)) ) + 
         #  ( rsL2 / 2 ) * as.double(crossprod(beta))
         
-        fun.beta <- sum(((y.mat + 1) / 2) * aa) - sum(log( rowSums(exp(aa)) )) / n + 
+        fun.beta <- (sum(((y.mat + 1) / 2) * aa) - sum(log( rowSums(exp(aa)) ))) / n + 
           ( rsL2 / 2 ) * sum(as.double(crossprod(beta)))
         
         #r.sum <- (as.double(crossprod(v)) + (c - sc)^2) / 2
