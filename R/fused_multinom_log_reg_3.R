@@ -1,6 +1,6 @@
 
 
-fusedMultinomLogReg <- function(x, y, groups = NULL,
+fusedMultinomialLogistic3 <- function(x, y, groups = NULL,
                                 lambda.lasso = 0, lambda.fused = 0,
                                 intercept = TRUE,
                                 irls.maxiter = 30, irls.tol = 1e-10, 
