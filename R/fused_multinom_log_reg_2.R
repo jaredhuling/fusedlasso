@@ -329,8 +329,8 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       while (TRUE) {
         # let s walk in a step in the antigradient of s to get v
         # and then do the Lq/L1-norm regularized projection
-        v <- s - g / L
-        c <- sc - gc / L
+        v <- s + g / L
+        c <- sc + gc / L
         
         print("g")
         print(g)
