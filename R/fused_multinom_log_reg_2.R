@@ -282,13 +282,14 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       print(b[1:10,])
       
       #the gradient of c
-      gc <- (colSums(y.mat+1)/(2) - 1) / n
+      #gc <- (colSums(y.mat+1)/(2) - 1) / n
+      gc <- colSums(b)
       
       #  should be sum i=1:n { sum k=1:K {y_i^(k)} - p_ij} 
       
       #compute g= xT b, the gradient of beta
       if (opts$nFlag == 0) {
-        g <- crossprod(x, b)
+        g <- crossprod(x / n, b)
       } else if (opts$nFlag == 1) {
         g <- (crossprod(x, b) - colSums(b) * mu) / nu
       } else {
