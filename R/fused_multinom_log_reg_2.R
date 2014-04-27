@@ -228,7 +228,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
     bFlag <- 0 
     
     # the intial guess of the Lipschitz continuous gradient
-    L <- 1 / sqrt(n) + rsL2
+    L <- 1 / n + rsL2
     
     # the product between weight and y
     #weighty <- weight * y.k
@@ -332,6 +332,8 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         v <- s - g / L
         c <- sc - gc / L
         
+        print("g")
+        print(g)
         print("v")
         print(v); print("z0")
         print(z0)
