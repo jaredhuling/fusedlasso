@@ -292,7 +292,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       print(prob[1:10,])
       
       #b <- -weighty * (1 - prob)
-      b <- ((y.mat+1)/2 - prob) * weight
+      b <- -((y.mat+1)/2 - prob) * weight
       
       print("b")
       print(b[1:10,])
@@ -329,8 +329,8 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       while (TRUE) {
         # let s walk in a step in the antigradient of s to get v
         # and then do the Lq/L1-norm regularized projection
-        v <- s + g / L
-        c <- sc + gc / L
+        v <- s - g / L
+        c <- sc - gc / L
         
         print("g")
         print(g)
@@ -435,7 +435,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         #r.sum <- (as.double(crossprod(v)) + (c - sc)^2) / 2
         #l.sum <- fun.beta - fun.s - as.double(crossprod(v, g)) - (c - sc) * gc
         r.sum <- (as.double(crossprod(as.vector(v))) + sum((c - sc)^2)) / 2
-        l.sum <- fun.beta - fun.s + sum(as.double(crossprod(as.vector(v), as.vector(g)))) + sum((c - sc) * gc)
+        l.sum <- fun.beta - fun.s - sum(as.double(crossprod(as.vector(v), as.vector(g)))) - sum((c - sc) * gc)
         #l.sum <- fun.beta - fun.s; r.sum <- 1e-10
         cat("r.sum: ", r.sum, "l.sum: ", l.sum, "fun.beta: ", fun.beta, "fun.s: ", fun.s)
         
