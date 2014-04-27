@@ -302,7 +302,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       gc <- colSums(b)
       
       print("gc")
-      print(gc[1:10,])
+      print(gc)
       
       #  should be sum i=1:n { sum k=1:K {y_i^(k)} - p_ij} 
       
