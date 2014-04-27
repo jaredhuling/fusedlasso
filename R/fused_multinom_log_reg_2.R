@@ -339,7 +339,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         
         for (k in 1:K) {
           if (is.null(groups)) {
-            res <- flsa(v[, k], z0[, k], lambda / L, lambda2 / L, p,
+            res <- flsa(v[, K-k+1], z0[, K-k+1], lambda / L, lambda2 / L, p,
                         1000, 1e-8, 1, 6)
             beta[, k] <- res[[1]]
             z0[, k] <- res[[2]]
@@ -357,7 +357,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
                 gr.idx.z <- gr.idx[-gr.p]
               }
               
-              res <- flsa(v[gr.idx, k], z0[gr.idx.z, k], lambda / L, 0, gr.p,
+              res <- flsa(v[gr.idx, K-k+1], z0[gr.idx.z, K-k+1], lambda / L, 0, gr.p,
                           1000, 1e-8, 1, 6)
               beta[gr.idx, k] <- res[[1]]
               z0[gr.idx.z, k] <- res[[2]]
@@ -373,7 +373,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
                 gr.idx.z <- gr.idx[-gr.p]
               }
               
-              res <- flsa(v[gr.idx, k], z0[gr.idx.z, k], lambda / L, lambda2 / L, gr.p,
+              res <- flsa(v[gr.idx, K-k+1], z0[gr.idx.z, K-k+1], lambda / L, lambda2 / L, gr.p,
                           1000, 1e-8, 1, 6)
               beta[gr.idx, k] <- res[[1]]
               z0[gr.idx.z, k] <- res[[2]]
