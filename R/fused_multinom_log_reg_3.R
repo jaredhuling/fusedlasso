@@ -26,9 +26,13 @@ fusedMultinomLogReg <- function(x, y, groups = NULL,
       if (!converged[k]) { 
         y.working <- 1 * (y.f == classes[k])
         
+        if (i == 1) {
+          z <- 4 * (y.working - 0.5)
+        }
+        
         init <- if (intercept) {prev[k,-1]} else {prev[k,]}
         
-        beta.tmp <- fusedlasso(x, y.working, w, groups = groups,
+        beta.tmp <- fusedlasso(x, z, w, groups = groups,
                                lambda.lasso = lambda.lasso, 
                                lambda.fused = lambda.fused, 
                                family = "gaussian")
@@ -52,7 +56,7 @@ fusedMultinomLogReg <- function(x, y, groups = NULL,
         p <- 1 / (1 + exp(-xwb))
         w <- p * (1 - p)
         
-        y.working <- xwb + (y - p) / w
+        z <- xwb + (y.working - p) / w
         
         betas[k,] <- beta
         
