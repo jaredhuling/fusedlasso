@@ -302,7 +302,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       
       #compute g= xT b, the gradient of beta
       if (opts$nFlag == 0) {
-        g <- crossprod(x / n, b)
+        g <- crossprod(x, b)
       } else if (opts$nFlag == 1) {
         g <- (crossprod(x, b) - colSums(b) * mu) / nu
       } else {
