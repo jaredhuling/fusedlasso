@@ -40,7 +40,7 @@ fusedMultinomLogReg <- function(x, y, groups = NULL,
         }
         
         if (intercept) {
-          #xwb.tmp <- drop(x %*% beta[-1])
+          xwb.tmp <- drop(x %*% beta[-1])
           #beta[1] <- mean( y.working - xwb.tmp)
           beta[1] <- beta.tmp$intercept
           xwb <- xwb.tmp + beta[1]
