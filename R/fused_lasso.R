@@ -41,7 +41,8 @@
 #' #fit fused lasso logistic model
 #' res <- fusedlasso(x, y1, lambda.lasso = 0.005, lambda.fused = 0.01, family = "binomial")
 #' round(res$beta, 5)
-fusedlasso <- function(x, y, lambda.lasso = 0, lambda.fused = 0, groups = NULL,
+fusedlasso <- function(x, y, weights = rep(1, nrow(x)), 
+                       lambda.lasso = 0, lambda.fused = 0, groups = NULL,
                        family = c("gaussian", "binomial", "multinomial"), 
                        opts = NULL, class.weights = NULL) {
   
@@ -57,7 +58,8 @@ fusedlasso <- function(x, y, lambda.lasso = 0, lambda.fused = 0, groups = NULL,
   opts$fusedPenalty <- lambda.fused
   
   if (family == "gaussian") {
-    res <- fusedLeastR(x = x.tilde, y = y, lambda = lambda.lasso, 
+    res <- fusedLeastR(x = sqrt(weights) * x.tilde, y = sqrt(weights) * y, 
+                       lambda = lambda.lasso, 
                        groups = groups, opts = opts)
     res$intercept <- mean(y)
   } else if (family == "binomial") {
