@@ -16,9 +16,11 @@ fusedMultinomLogReg <- function(x, y, groups = NULL,
   if (!is.null(beta.init)) {
     stopifnot(all(dim(beta.init) == c(K, len)))
   }
-  w <- rep(0.5, nobs)
+  
   betas <- if(is.null(beta.init)) {array(1, dim = c(K, len))} else {beta.init}
   beta <- betas[1,]
+  z <- w <- vector(mode = "list", length = K)
+  w[1:K] <- rep(0.5, nobs)
   converged <- rep(FALSE, K)
   for (i in 1:irls.maxiter) {
     prev <- betas
@@ -27,12 +29,12 @@ fusedMultinomLogReg <- function(x, y, groups = NULL,
         y.working <- 1 * (y.f == classes[k])
         
         if (i == 1) {
-          z <- 4 * (y.working - 0.5)
+          z[[k]] <- 4 * (y.working - 0.5)
         }
         
         init <- if (intercept) {prev[k,-1]} else {prev[k,]}
         
-        beta.tmp <- fusedlasso(x, z, w, groups = groups,
+        beta.tmp <- fusedlasso(x, z[[k]], w[[k]], groups = groups,
                                lambda.lasso = lambda.lasso, 
                                lambda.fused = lambda.fused, 
                                family = "gaussian")
@@ -54,9 +56,9 @@ fusedMultinomLogReg <- function(x, y, groups = NULL,
         
         # update weights
         p <- 1 / (1 + exp(-xwb))
-        w <- p * (1 - p)
+        w[[k]] <- p * (1 - p)
         
-        z <- xwb + (y.working - p) / w
+        z[[k]] <- xwb + (y.working - p) / w[[k]]
         
         betas[k,] <- beta
         
