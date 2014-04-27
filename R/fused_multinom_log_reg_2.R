@@ -109,7 +109,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
    weight[which(p.flag)] <- sWeight[1] / (m1 + m2)
    weight[which(!p.flag)] <- sWeight[2] / (m1 + m2)
   } else {
-   weight <- array(1, dim = c(n, K)) / (n * K)
+   weight <- array(1, dim = c(n, K)) / n
   }
   
   ## L2 norm regularization
@@ -288,6 +288,9 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       
       prob <- prob / rowSums(prob)
       
+      print("prob")
+      print(prob[1:10,])
+      
       #b <- -weighty * (1 - prob)
       b <- ((y.mat+1)/2 - prob) * weight
       
@@ -297,6 +300,9 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       #the gradient of c
       #gc <- (colSums(y.mat+1)/(2) - 1) / n
       gc <- colSums(b)
+      
+      print("gc")
+      print(gc[1:10,])
       
       #  should be sum i=1:n { sum k=1:K {y_i^(k)} - p_ij} 
       
