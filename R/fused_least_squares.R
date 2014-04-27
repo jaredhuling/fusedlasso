@@ -1,6 +1,6 @@
 
 
-fusedLeastR <- function(x, y, lambda, opts=NULL) {
+fusedLeastR <- function(x, y, lambda, groups = NULL, opts=NULL) {
   
   # Function fusedLeastR
   #      Least Squares Loss with the Fused Lasso Penalty
@@ -22,6 +22,11 @@ fusedLeastR <- function(x, y, lambda, opts=NULL) {
   
   # run sllOpts to set default values (flags)
   opts <- sllOpts(opts)
+  
+  # if groups are given, get unique groups
+  if (!is.null(groups)) {
+    unique.groups <- sort(unique(groups[!is.na(groups)]))
+  }
   
   ## Set up options
   if (opts$nFlag != 0) {
@@ -202,12 +207,48 @@ fusedLeastR <- function(x, y, lambda, opts=NULL) {
         ## and then do the l1-norm regularized projection
         v <- s - g / L
         
-        flsa.res <- flsa(v, z0, lambda / L, lambda2 / L, p,
-                         1000, 1e-8, 1, 6)
-        
-        b <- flsa.res[[1]]
-        z0 <- flsa.res[[2]]
-        infor <- flsa.res[[3]]
+        if (is.null(groups)) {
+          res <- flsa(v, z0, lambda / L, lambda2 / L, p,
+                      1000, 1e-8, 1, 6)
+          b <- res[[1]]
+          z0 <- res[[2]]
+          infor <- res[[3]]
+        } else {
+          
+          if (any(is.na(groups))) {
+            ## don't apply fused lasso penalty
+            ## to variables with group == NA 
+            gr.idx <- which(is.na(groups))
+            gr.p <- length(gr.idx)
+            if (any(gr.idx == 1)) {
+              gr.idx.z <- gr.idx[gr.idx != 1] - 1
+            } else {
+              gr.idx.z <- gr.idx[-gr.p]
+            }
+            
+            res <- flsa(v[gr.idx], z0[gr.idx.z], lambda / L, 0, gr.p,
+                        1000, 1e-8, 1, 6)
+            b[gr.idx] <- res[[1]]
+            z0[gr.idx.z] <- res[[2]]
+            infor <- res[[3]]
+          }
+          
+          for (t in 1:length(unique.groups)) {
+            gr.idx <- which(groups == unique.groups[t])
+            gr.p <- length(gr.idx)
+            if (any(gr.idx == 1)) {
+              gr.idx.z <- gr.idx[gr.idx != 1] - 1
+            } else {
+              gr.idx.z <- gr.idx[-gr.p]
+            }
+            
+            res <- flsa(v[gr.idx], z0[gr.idx.z], lambda / L, lambda2 / L, gr.p,
+                        1000, 1e-8, 1, 6)
+            b[gr.idx] <- res[[1]]
+            z0[gr.idx.z] <- res[[2]]
+            infor <- res[[3]]
+          }
+        }
         
         ## the difference between the new approximate 
         ## solution x and the search point s
@@ -257,7 +298,7 @@ fusedLeastR <- function(x, y, lambda, opts=NULL) {
       
       funVal[iterStep] <- as.double(crossprod(xby)) / 2 + 
         sum(abs(b)) * lambda + lambda2 * sum(abs( b[2:p] - b[1:(p-1)] ))
-      cat("  xby: ", as.double(crossprod(xby))/2)
+
       
       if (bFlag) {
         break
