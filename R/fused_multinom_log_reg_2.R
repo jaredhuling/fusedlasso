@@ -437,9 +437,9 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         r.sum <- (as.double(crossprod(as.vector(v))) + sum((c - sc)^2)) / 2
         l.sum <- fun.beta - fun.s - sum(as.double(crossprod(as.vector(v), as.vector(g)))) - sum((c - sc) * gc)
         #l.sum <- fun.beta - fun.s; r.sum <- 1e-10
-        cat("r.sum: ", r.sum, "l.sum: ", l.sum, "fun.beta: ", fun.beta, "fun.s: ", fun.s)
+        cat("r.sum: ", r.sum, "l.sum: ", l.sum, "fun.beta: ", fun.beta, "fun.s: ", fun.s, " L: ", L)
         
-        if (r.sum <= 1e-18) {
+        if (r.sum <= 1e-8) {
           #this shows that the gradient step makes little improvement
           bFlag <- 1
           break
