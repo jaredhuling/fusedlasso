@@ -109,7 +109,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
    weight[which(p.flag)] <- sWeight[1] / (m1 + m2)
    weight[which(!p.flag)] <- sWeight[2] / (m1 + m2)
   } else {
-   weight <- array(1, dim = c(n, K)) / n
+   weight <- array(1, dim = c(n, K)) / (n * K)
   }
   
   ## L2 norm regularization
@@ -281,7 +281,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         }
         fun.s <- fun.s - log(lsum)
       }
-      fun.s <- fun.s / n
+      fun.s <- -fun.s / n
       
       #fun.s <- -sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(prob) ) / n) + 
       #  ( rsL2 / 2 ) * sum(as.double(crossprod(s)))
@@ -421,7 +421,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
           }
           fun.beta <- fun.beta - log(lsum)
         }
-        fun.beta <- fun.beta / n
+        fun.beta <- -fun.beta / n
         
         #r.sum <- (as.double(crossprod(v)) + (c - sc)^2) / 2
         #l.sum <- fun.beta - fun.s - as.double(crossprod(v, g)) - (c - sc) * gc
