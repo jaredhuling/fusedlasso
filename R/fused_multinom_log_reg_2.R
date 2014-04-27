@@ -270,8 +270,21 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       #prob <- 1 / (1 + exp(aa))
       prob <- exp(aa)
       
-      fun.s <- -sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(prob) ) / n) + 
-        ( rsL2 / 2 ) * sum(as.double(crossprod(s)))
+      fun.s <- 0
+      for (i in 1:200) {
+        #xi <- x[i,]
+        lsum <- 0
+        for (j in 1:5) {
+          xib <- aa[i,j]
+          fun.s <- fun.s + (y.mat[i,j] + 1) * xib / 2
+          lsum <- lsum + exp(xib)
+        }
+        fun.s <- fun.s - log(lsum)
+      }
+      fun.s <- fun.s / n
+      
+      #fun.s <- -sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(prob) ) / n) + 
+      #  ( rsL2 / 2 ) * sum(as.double(crossprod(s)))
       
       prob <- prob / rowSums(prob)
       
@@ -394,8 +407,21 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         #fun.beta <- as.double( crossprod(weight, (log(exp(-bb) + exp(aa - bb)) + bb)) ) + 
         #  ( rsL2 / 2 ) * as.double(crossprod(beta))
         
-        fun.beta <- -sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(exp(aa)) ) / n) + 
-          ( rsL2 / 2 ) * sum(as.double(crossprod(beta)))
+        #fun.beta <- -sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(exp(aa)) ) / n) + 
+        #  ( rsL2 / 2 ) * sum(as.double(crossprod(beta)))
+        
+        fun.beta <- 0
+        for (i in 1:200) {
+          #xi <- x[i,]
+          lsum <- 0
+          for (j in 1:5) {
+            xib <- aa[i,j]
+            fun.beta <- fun.beta + (y.mat[i,j] + 1) * xib / 2
+            lsum <- lsum + exp(xib)
+          }
+          fun.beta <- fun.beta - log(lsum)
+        }
+        fun.beta <- fun.beta / n
         
         #r.sum <- (as.double(crossprod(v)) + (c - sc)^2) / 2
         #l.sum <- fun.beta - fun.s - as.double(crossprod(v, g)) - (c - sc) * gc
