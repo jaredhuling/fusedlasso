@@ -57,7 +57,8 @@ fusedlasso <- function(x, y, lambda.lasso = 0, lambda.fused = 0, groups = NULL,
   opts$fusedPenalty <- lambda.fused
   
   if (family == "gaussian") {
-    res <- fusedLeastR(x = x.tilde, y = y, lambda = lambda.lasso, opts = opts)
+    res <- fusedLeastR(x = x.tilde, y = y, lambda = lambda.lasso, 
+                       groups = groups, opts = opts)
     res$intercept <- mean(y)
   } else if (family == "binomial") {
     
