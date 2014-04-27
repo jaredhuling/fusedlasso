@@ -428,6 +428,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
           fun.beta <- fun.beta - log(lsum)
         }
         fun.beta <- -fun.beta / n
+        if (fun.beta > 1e10) {fun.beta <- 1e10}
         
         #r.sum <- (as.double(crossprod(v)) + (c - sc)^2) / 2
         #l.sum <- fun.beta - fun.s - as.double(crossprod(v, g)) - (c - sc) * gc
