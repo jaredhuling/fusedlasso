@@ -47,21 +47,21 @@ fusedlasso <- function(x, y, weights = rep(1, nrow(x)),
                        opts = NULL, class.weights = NULL) {
   
   family <- match.arg(family)
-  colM <- colMeans(x)
+  colM <- colMeans(sqrt(weights) * x)
   p <- ncol(x)
   n <- nrow(x)
 
-  x.tilde <- x - matrix(rep(colM, n), ncol=p, byrow=TRUE)
+  x.tilde <- sqrt(weights) * x - matrix(rep(colM, n), ncol=p, byrow=TRUE)
   if (is.null(opts)) {
     opts <- sllOpts()
   }
   opts$fusedPenalty <- lambda.fused
   
   if (family == "gaussian") {
-    res <- fusedLeastR(x = sqrt(weights) * x.tilde, y = sqrt(weights) * y, 
+    res <- fusedLeastR(x = x.tilde, y = sqrt(weights) * y, 
                        lambda = lambda.lasso, 
                        groups = groups, opts = opts)
-    res$intercept <- mean(y)
+    res$intercept <- mean(sqrt(weights) * y)
   } else if (family == "binomial") {
     
     if (any(sort(unique(y)) != c(-1, 1) )) {
