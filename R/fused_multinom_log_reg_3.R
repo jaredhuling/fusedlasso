@@ -56,7 +56,7 @@ fusedMultinomLogReg <- function(x, y, groups = NULL,
         
         betas[k,] <- beta
         
-        if (all(abs(beta - prev[k,]) < fused.tol)) {
+        if (all(abs(beta - prev[k,]) < irls.tol)) {
           converged[k] <- TRUE
         }
         
