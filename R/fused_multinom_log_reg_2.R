@@ -434,8 +434,12 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         
         #r.sum <- (as.double(crossprod(v)) + (c - sc)^2) / 2
         #l.sum <- fun.beta - fun.s - as.double(crossprod(v, g)) - (c - sc) * gc
-        r.sum <- (as.double(crossprod(as.vector(v))) + sum((c - sc)^2)) / 2
-        l.sum <- fun.beta - fun.s - sum(as.double(crossprod(as.vector(v), as.vector(g)))) - sum((c - sc) * gc)
+        #r.sum <- (as.double(crossprod(as.vector(v))) + sum((c - sc)^2)) / 2
+        #l.sum <- fun.beta - fun.s - sum(as.double(crossprod(as.vector(v), as.vector(g)))) - sum((c - sc) * gc)
+        
+        r.sum <- (as.double(trace(crossprod(v))) + sum((c - sc)^2)) / 2
+        l.sum <- fun.beta - fun.s - (as.double(trace(crossprod(v, g)))) - sum((c - sc) * gc)
+        
         #l.sum <- fun.beta - fun.s; r.sum <- 1e-10
         cat("r.sum: ", r.sum, "l.sum: ", l.sum, "fun.beta: ", fun.beta, "fun.s: ", fun.s, " L: ", L)
         
