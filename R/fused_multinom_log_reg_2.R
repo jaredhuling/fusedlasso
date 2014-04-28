@@ -437,8 +437,11 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         #r.sum <- (as.double(crossprod(as.vector(v))) + sum((c - sc)^2)) / 2
         #l.sum <- fun.beta - fun.s - sum(as.double(crossprod(as.vector(v), as.vector(g)))) - sum((c - sc) * gc)
         
-        r.sum <- (as.double(sum(diag(crossprod(v)))) + sum((c - sc)^2)) / 2
-        l.sum <- fun.beta - fun.s - (as.double(sum(diag(crossprod(v, g))))) - sum((c - sc) * gc)
+        
+        r.sum <- norm(v, type = "F") ^ 2 + sum((c - sc)^2)) / 2
+        fzp.gamma <- fun.s + sum(sum(v * g)) + (L / 2) * r.sum + sum((c - sc) * gc)
+        #r.sum <- (as.double(sum(diag(crossprod(v)))) + sum((c - sc)^2)) / 2
+        #l.sum <- fun.beta - fun.s - (as.double(sum(diag(crossprod(v, g))))) - sum((c - sc) * gc)
         
         #l.sum <- fun.beta - fun.s; r.sum <- 1e-10
         cat("r.sum: ", r.sum, "l.sum: ", l.sum, "fun.beta: ", fun.beta, "fun.s: ", fun.s, " L: ", L)
@@ -452,10 +455,10 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         ## the condition is fun.beta <= fun.s + v'* g + c * gc
         ##                           + L/2 * (v'*v + (c-sc)^2 )
         
-        if (l.sum <= r.sum * L) {
+        if (fun.beta <= fzp.gamma) {
           break
         } else {
-          L <- max(2 * L, l.sum / r.sum)
+          L <- max(2 * L, (fun.beta * L) / fzp.gamma)
         }
         
       } # end while loop
