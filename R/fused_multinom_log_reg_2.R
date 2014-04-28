@@ -285,7 +285,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         }
         fun.s <- fun.s - log(lsum)
       }
-      fun.s <- -fun.s / n + sum(bb) / n
+      fun.s <- -fun.s / n# + sum(bb) / n
       
       #fun.s <- -sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(prob) ) / n) + 
       #  ( rsL2 / 2 ) * sum(as.double(crossprod(s)))
