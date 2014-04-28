@@ -462,7 +462,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         
         cat("r.sum: ", fzp.gamma, "l.sum: ", fun.beta, "fun.s: ", fun.s, " L: ", L)
         
-        if (r.sum <= 1e-3) {
+        if (r.sum <= 1e-18) {
           #this shows that the gradient step makes little improvement
           bFlag <- 1
           break
