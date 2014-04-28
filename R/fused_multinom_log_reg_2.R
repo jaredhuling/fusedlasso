@@ -433,7 +433,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
           }
           fun.beta <- fun.beta - log(lsum)
         }
-        fun.beta <- -fun.beta / n + sum(bb) / n
+        fun.beta <- -fun.beta / n # + sum(bb) / n
         if (fun.beta > 1e10) {fun.beta <- 1e10}
         
         #r.sum <- (as.double(crossprod(v)) + (c - sc)^2) / 2
@@ -444,7 +444,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         
         r.sum <- norm(v, type = "F") ^ 2 + sum((c - sc)^2) / 2
         #fzp.gamma <- fun.s + sum(sum(v * g)) + (L / 2) * r.sum + sum((c - sc) * gc) + L * sum((c - sc)^2) / 2
-        fzp.gamma <- fun.s + sum(sum(v * g)) + L * r.sum + sum((c - sc) * gc)
+        fzp.gamma <- fun.s + sum(sum(v * g)) - L * r.sum + sum((c - sc) * gc)
         #r.sum <- (as.double(sum(diag(crossprod(v)))) + sum((c - sc)^2)) / 2
         #l.sum <- fun.beta - fun.s - (as.double(sum(diag(crossprod(v, g))))) - sum((c - sc) * gc)
         
@@ -487,7 +487,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       ccp <- c - cp
       
       funVal[iterStep] <- fun.beta + lambda * sum(abs(beta)) +
-        lambda2 * sum(abs(beta[2:p] - beta[1:(p-1)]))
+        lambda2 * sum(abs(beta[2:p,] - beta[1:(p-1),]))
       
       if (bFlag) {
         break
