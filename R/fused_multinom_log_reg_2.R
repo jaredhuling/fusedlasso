@@ -25,7 +25,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
   #  stop("y must be in {-1, 1}")
   #}
   opts.orig <- opts
-  diff.prev <- -n
+  
   
   # if groups are given, get unique groups
   if (!is.null(groups)) {
@@ -244,6 +244,8 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
     alphap <- 0; alpha <- 1
     
     for (iterStep in 1:opts$maxIter) {
+      
+      diff.prev <- -n
       
       ## --------------------------- step 1 ---------------------------
       ##      compute search point s based on xp and x (with beta)
