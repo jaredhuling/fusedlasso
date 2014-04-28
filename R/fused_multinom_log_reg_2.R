@@ -25,6 +25,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
   #  stop("y must be in {-1, 1}")
   #}
   opts.orig <- opts
+  diff.prev <- -n
   
   # if groups are given, get unique groups
   if (!is.null(groups)) {
@@ -125,6 +126,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
   #m1 <- sum(weight[which(p.flag)])
   m1 <- colSums(p.flag * weight)
   m2 <- 1 - m1
+  
   
   ## L1 norm regularization
   if (opts$rFlag != 0) {
@@ -446,6 +448,8 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         #l.sum <- fun.beta - fun.s; r.sum <- 1e-10
         #cat("r.sum: ", r.sum, "l.sum: ", l.sum, "fun.beta: ", fun.beta, "fun.s: ", fun.s, " L: ", L)
         
+        
+        
         cat("r.sum: ", fzp.gamma, "l.sum: ", fun.beta, "fun.s: ", fun.s, " L: ", L)
         
         if (r.sum <= 1e-3) {
@@ -457,11 +461,13 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         ## the condition is fun.beta <= fun.s + v'* g + c * gc
         ##                           + L/2 * (v'*v + (c-sc)^2 )
         
-        if (fun.beta <= fzp.gamma) {
+        if (fun.beta <= fzp.gamma | fun.s - fun.beta < diff.prev) {
           break
         } else {
           L <- max(2 * L, (fun.beta * L) / fzp.gamma)
         }
+        
+        diff.prev <- fun.s - fun.beta
         
       } # end while loop
       
