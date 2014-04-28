@@ -29,7 +29,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
   
   # if groups are given, get unique groups
   if (!is.null(groups)) {
-    unique.groups <- vector(mode = "list", length == K)
+    unique.groups <- vector(mode = "list", length = K)
     if (is.list(groups)) {
       if (length(groups) != K) {
         stop("Group list but have one element per class")
@@ -41,7 +41,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
     } else {
       unique.groups[1:K] <- sort(unique(groups[!is.na(groups)]))
       gr.list <- vector(mode = "list", length = K)
-      gr.list[1:K] <- groups
+      gr.list[1:K] <- rep(list(groups), K)
       groups <- gr.list
     }
   }

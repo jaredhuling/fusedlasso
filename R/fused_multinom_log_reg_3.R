@@ -20,7 +20,7 @@ fusedMultinomialLogistic3 <- function(x, y, groups = NULL,
   betas <- if(is.null(beta.init)) {array(1, dim = c(K, len))} else {beta.init}
   beta <- betas[1,]
   z <- w <- vector(mode = "list", length = K)
-  w[1:K] <- rep(0.5, nobs)
+  w[1:K] <- rep(list(rep(0.5, nobs)), K)
   converged <- rep(FALSE, K)
   for (i in 1:irls.maxiter) {
     prev <- betas
