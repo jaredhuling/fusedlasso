@@ -289,8 +289,12 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       
       #fun.s <- -sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(prob) ) / n) + 
       #  ( rsL2 / 2 ) * sum(as.double(crossprod(s)))
+      rSp <- rowSums(prob)
       
-      prob <- prob / rowSums(prob)
+      fun.s <- -sum(rowSums(((y.mat + 1) / 2) * aa) - log( rSp )) / n + 
+        ( rsL2 / 2 ) * sum(as.double(crossprod(s)))
+      
+      prob <- prob / rSp
       
       print("prob")
       print(prob[1:10,])
@@ -436,6 +440,9 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         fun.beta <- -fun.beta / n # + sum(bb) / n
         if (fun.beta > 1e10) {fun.beta <- 1e10}
         
+        fun.beta <- -sum(rowSums(((y.mat + 1) / 2) * aa) - log( rowSums(exp(aa)) )) / n + 
+          ( rsL2 / 2 ) * sum(as.double(crossprod(beta)))
+        
         #r.sum <- (as.double(crossprod(v)) + (c - sc)^2) / 2
         #l.sum <- fun.beta - fun.s - as.double(crossprod(v, g)) - (c - sc) * gc
         #r.sum <- (as.double(crossprod(as.vector(v))) + sum((c - sc)^2)) / 2
@@ -444,7 +451,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         
         r.sum <- norm(v, type = "F") ^ 2 + sum((c - sc)^2) / 2
         #fzp.gamma <- fun.s + sum(sum(v * g)) + (L / 2) * r.sum + sum((c - sc) * gc) + L * sum((c - sc)^2) / 2
-        fzp.gamma <- fun.s + sum(sum(v * g)) - L * r.sum + sum((c - sc) * gc)
+        fzp.gamma <- fun.s + sum(sum(v * g)) + L * r.sum + sum((c - sc) * gc)
         #r.sum <- (as.double(sum(diag(crossprod(v)))) + sum((c - sc)^2)) / 2
         #l.sum <- fun.beta - fun.s - (as.double(sum(diag(crossprod(v, g))))) - sum((c - sc) * gc)
         
