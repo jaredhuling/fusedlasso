@@ -265,7 +265,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       print(aa[1:10,])
       
       # fun.s is the logistic loss at the search point
-      bb <- pmax(- y.k * aa, 0)
+      bb <- pmax(- y.mat * aa, 0)
       #fun.s <- as.double( crossprod(weight, (log(exp(-bb) + exp(aa - bb)) + bb)) ) + 
       #  ( rsL2 / 2 ) * as.double(crossprod(s))
 
@@ -415,7 +415,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         
         # fun.beta is the logistic loss at the new approximate solution
         #bb <- pmax(aa, 0)
-        bb <- pmax(- y.k * aa, 0)
+        bb <- pmax(- y.mat * aa, 0)
         #fun.beta <- as.double( crossprod(weight, (log(exp(-bb) + exp(aa - bb)) + bb)) ) + 
         #  ( rsL2 / 2 ) * as.double(crossprod(beta))
         
