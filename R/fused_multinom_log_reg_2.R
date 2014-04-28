@@ -265,7 +265,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
       print(aa[1:10,])
       
       # fun.s is the logistic loss at the search point
-      #bb <- pmax(aa, 0)
+      bb <- pmax(- y.k * aa, 0)
       #fun.s <- as.double( crossprod(weight, (log(exp(-bb) + exp(aa - bb)) + bb)) ) + 
       #  ( rsL2 / 2 ) * as.double(crossprod(s))
 
@@ -285,7 +285,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         }
         fun.s <- fun.s - log(lsum)
       }
-      fun.s <- -fun.s / n
+      fun.s <- -fun.s / n + sum(bb) / n
       
       #fun.s <- -sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(prob) ) / n) + 
       #  ( rsL2 / 2 ) * sum(as.double(crossprod(s)))
@@ -414,8 +414,8 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         aa <- (xbeta + rep(c, each = n))
         
         # fun.beta is the logistic loss at the new approximate solution
-        bb <- pmax(aa, 0)
-        
+        #bb <- pmax(aa, 0)
+        bb <- pmax(- y.k * aa, 0)
         #fun.beta <- as.double( crossprod(weight, (log(exp(-bb) + exp(aa - bb)) + bb)) ) + 
         #  ( rsL2 / 2 ) * as.double(crossprod(beta))
         
@@ -433,7 +433,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
           }
           fun.beta <- fun.beta - log(lsum)
         }
-        fun.beta <- -fun.beta / n
+        fun.beta <- -fun.beta / n + sum(bb) / n
         if (fun.beta > 1e10) {fun.beta <- 1e10}
         
         #r.sum <- (as.double(crossprod(v)) + (c - sc)^2) / 2
@@ -455,7 +455,7 @@ fusedMultinomialLogistic2 <- function(x, y, lambda, groups = NULL,
         
         cat("r.sum: ", fzp.gamma, "l.sum: ", fun.beta, "fun.s: ", fun.s, " L: ", L)
         
-        if (r.sum <= 1e-18) {
+        if (r.sum <= 1e-3) {
           #this shows that the gradient step makes little improvement
           bFlag <- 1
           break
