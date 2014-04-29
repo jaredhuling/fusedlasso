@@ -406,7 +406,7 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
           L <- 2 * L
         }
         
-        diff.prev <- funval.s - funval
+        #diff.prev <- funval.s - funval
         
       } # end while loop
       
