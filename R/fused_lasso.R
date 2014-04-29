@@ -64,6 +64,7 @@ fusedlasso <- function(x, y, weights = rep(1, nrow(x)),
                        lambda.group = lambda.group,
                        groups = groups, opts = opts)
     res$intercept <- mean(sqrt(weights) * y)
+    
   } else if (family == "binomial") {
     
     if (any(sort(unique(y)) != c(-1, 1) )) {
@@ -73,6 +74,7 @@ fusedlasso <- function(x, y, weights = rep(1, nrow(x)),
     res <- fusedLogisticR(x = x.tilde, y, lambda = lambda.lasso, 
                           lambda.group = lambda.group, groups = groups,
                           class.weights = class.weights, opts = opts)
+    
   } else if (family == "multinomial") {
     res <- fusedMultinomialLogistic(x = x.tilde, y, lambda = lambda.lasso, 
                                     lambda.group = lambda.group,
