@@ -293,6 +293,18 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
       fun.s <- -sum(rowSums(((y.mat + 1) / 2) * aa) - log( rSp )) / n + 
         ( rsL2 / 2 ) * sum(as.double(crossprod(s)))
       
+      fused.pen <- 0
+      for (t in 1:length(unique.groups[[k]])) {
+        gr.idx <- which(groups[[k]] == unique.groups[[k]][t])
+        gr.p <- length(gr.idx)
+        if (gr.p > 1) {
+          fused.pen <- fused.pen + sum(abs(s[gr.idx[2:(gr.p)],k] - s[gr.idx[1:(gr.p - 1)],k]))
+        }
+      }
+      
+      funval.s <- fun.s + lambda * sum(abs(s)) +
+        lambda2 * fused.pen
+      
       prob <- prob / rSp
 
       #b <- -weighty * (1 - prob)
@@ -422,6 +434,17 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
         #r.sum <- (as.double(crossprod(as.vector(v))) + sum((c - sc)^2)) / 2
         #l.sum <- fun.beta - fun.s - sum(as.double(crossprod(as.vector(v), as.vector(g)))) - sum((c - sc) * gc)
         
+        fused.pen <- 0
+        for (t in 1:length(unique.groups[[k]])) {
+          gr.idx <- which(groups[[k]] == unique.groups[[k]][t])
+          gr.p <- length(gr.idx)
+          if (gr.p > 1) {
+            fused.pen <- fused.pen + sum(abs(beta[gr.idx[2:(gr.p)],k] - beta[gr.idx[1:(gr.p - 1)],k]))
+          }
+        }
+        
+        funval <- fun.beta + lambda * sum(abs(beta)) +
+          lambda2 * fused.pen
         
         r.sum <- norm(v, type = "F") ^ 2 + sum((c - sc)^2) / 2
         #fzp.gamma <- fun.s + sum(sum(v * g)) + (L / 2) * r.sum + sum((c - sc) * gc) + L * sum((c - sc)^2) / 2
@@ -441,14 +464,14 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
         ## the condition is fun.beta <= fun.s + v'* g + c * gc
         ##                           + L/2 * (v'*v + (c-sc)^2 )
         
-        if (fun.beta <= fzp.gamma) { # | fun.s - fun.beta < diff.prev
+        if (fun.beta <= fzp.gamma | funval.s - funval < diff.prev)
           break
         } else {
           #L <- max(2 * L, (fun.beta * L) / fzp.gamma)
           L <- 2 * L
         }
         
-        diff.prev <- fun.s - fun.beta
+        diff.prev <- funval.s - funval
         
       } # end while loop
       
