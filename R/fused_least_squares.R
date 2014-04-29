@@ -263,7 +263,7 @@ fusedLeastR <- function(x, y, lambda, lambda.group = 0, groups = NULL, opts=NULL
               newbeta <- res[[1]]
             }
             
-            beta[gr.idx] <- newbeta
+            b[gr.idx] <- newbeta
             z0[gr.idx.z] <- res[[2]]
             infor <- res[[3]]
           }
