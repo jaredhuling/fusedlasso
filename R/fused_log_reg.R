@@ -343,7 +343,7 @@ fusedLogisticR <- function(x, y, lambda,
         fun.beta <- as.double( crossprod(weight, (log(exp(-bb) + exp(aa - bb)) + bb)) ) + 
           ( rsL2 / 2 ) * as.double(crossprod(beta))
 
-        r.sum <- (as.double(crossprod(v)) + (c - sc)^2) / 2
+        r.sum <- (as.double(crossprod(v)) / 2 + (c - sc)^2) / 2
         l.sum <- fun.beta - fun.s - as.double(crossprod(v, g)) - (c - sc) * gc
         
         
