@@ -277,6 +277,7 @@ fusedLogisticR <- function(x, y, lambda,
             
             res <- flsa(v[gr.idx], z0[gr.idx.z], lambda / L, 0, gr.p,
                         1000, 1e-8, 1, 6)
+            
             beta[gr.idx] <- res[[1]]
             z0[gr.idx.z] <- res[[2]]
             infor <- res[[3]]
