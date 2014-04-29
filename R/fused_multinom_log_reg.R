@@ -273,37 +273,11 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
       #prob <- 1 / (1 + exp(aa))
       prob <- exp(aa)
       
-      #fun.s <- 0
-      #for (i in 1:200) {
-       # #xi <- x[i,]
-        #lsum <- 0
-        #for (j in 1:5) {
-        #  xib <- aa[i,j]
-        #  fun.s <- fun.s + (y.mat[i,j] + 1) * xib / 2
-        #  lsum <- lsum + exp(xib)
-       # }
-      #  fun.s <- fun.s - log(lsum)
-      #}
-      #fun.s <- -fun.s / n# + sum(bb) / n
-      
-      #fun.s <- -sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(prob) ) / n) + 
-      #  ( rsL2 / 2 ) * sum(as.double(crossprod(s)))
+
       rSp <- rowSums(prob)
       
       fun.s <- -sum(rowSums(((y.mat + 1) / 2) * aa) - log( rSp )) / n + 
         ( rsL2 / 2 ) * sum(as.double(crossprod(s)))
-      
-      fused.pen <- 0
-      for (t in 1:length(unique.groups[[k]])) {
-        gr.idx <- which(groups[[k]] == unique.groups[[k]][t])
-        gr.p <- length(gr.idx)
-        if (gr.p > 1) {
-          fused.pen <- fused.pen + sum(abs(s[gr.idx[2:(gr.p)],k] - s[gr.idx[1:(gr.p - 1)],k]))
-        }
-      }
-      
-      funval.s <- fun.s + lambda * sum(abs(s)) +
-        lambda2 * fused.pen
       
       prob <- prob / rSp
 
@@ -404,55 +378,16 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
         aa <- (xbeta + rep(c, each = n))
         
         # fun.beta is the logistic loss at the new approximate solution
-        #bb <- pmax(aa, 0)
         bb <- pmax(- y.mat * aa, 0)
-        #fun.beta <- as.double( crossprod(weight, (log(exp(-bb) + exp(aa - bb)) + bb)) ) + 
-        #  ( rsL2 / 2 ) * as.double(crossprod(beta))
-        
-        #fun.beta <- -sum(rowSums(((y.mat + 1) / 2) * aa * weight) - log( rowSums(exp(aa)) ) / n) + 
-        #  ( rsL2 / 2 ) * sum(as.double(crossprod(beta)))
-        
-        #fun.beta <- 0
-        #for (i in 1:200) {
-        #  #xi <- x[i,]
-        #  lsum <- 0
-        #  for (j in 1:5) {
-        #    xib <- aa[i,j]
-        #    fun.beta <- fun.beta + (y.mat[i,j] + 1) * xib / 2
-        #    lsum <- lsum + exp(xib)
-        #  }
-        #  fun.beta <- fun.beta - log(lsum)
-        #}
-        #fun.beta <- -fun.beta / n # + sum(bb) / n
-        #if (fun.beta > 1e10) {fun.beta <- 1e10}
+
         
         fun.beta <- -sum(rowSums(((y.mat + 1) / 2) * aa) - log( rowSums(exp(aa)) )) / n + 
           ( rsL2 / 2 ) * sum(as.double(crossprod(beta)))
         
-        #r.sum <- (as.double(crossprod(v)) + (c - sc)^2) / 2
-        #l.sum <- fun.beta - fun.s - as.double(crossprod(v, g)) - (c - sc) * gc
-        #r.sum <- (as.double(crossprod(as.vector(v))) + sum((c - sc)^2)) / 2
-        #l.sum <- fun.beta - fun.s - sum(as.double(crossprod(as.vector(v), as.vector(g)))) - sum((c - sc) * gc)
-        
-        fused.pen <- 0
-        for (t in 1:length(unique.groups[[k]])) {
-          gr.idx <- which(groups[[k]] == unique.groups[[k]][t])
-          gr.p <- length(gr.idx)
-          if (gr.p > 1) {
-            fused.pen <- fused.pen + sum(abs(beta[gr.idx[2:(gr.p)],k] - beta[gr.idx[1:(gr.p - 1)],k]))
-          }
-        }
-        
-        funval <- fun.beta + lambda * sum(abs(beta)) +
-          lambda2 * fused.pen
+
         
         r.sum <- norm(v, type = "F") ^ 2 / 2 + sum((c - sc)^2) / 2
-        #fzp.gamma <- fun.s + sum(sum(v * g)) + (L / 2) * r.sum + sum((c - sc) * gc) + L * sum((c - sc)^2) / 2
         fzp.gamma <- fun.s + sum(sum(v * g)) + L * r.sum + sum((c - sc) * gc)
-        #r.sum <- (as.double(sum(diag(crossprod(v)))) + sum((c - sc)^2)) / 2
-        #l.sum <- fun.beta - fun.s - (as.double(sum(diag(crossprod(v, g))))) - sum((c - sc) * gc)
-        
-        #l.sum <- fun.beta - fun.s; r.sum <- 1e-10
 
 
         if (r.sum <= 1e-18) {
