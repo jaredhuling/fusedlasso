@@ -363,7 +363,8 @@ fusedMultinomialLogistic <- function(x, y, lambda, lambda.group = 0, groups = NU
                 if (nm == 0) {
                   newbeta = numeric(length(res[[1]]))
                 } else {
-                  newbeta = pmax(nm - lambda.group, 0) / nm * res[[1]]
+                  #apply soft thresholding, adjust penalty for size of group
+                  newbeta = pmax(nm - lambda.group * sqrt(gr.p), 0) / nm * res[[1]]
                 }
                 end
               } else {
