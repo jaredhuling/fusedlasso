@@ -344,7 +344,8 @@ fusedLogisticR <- function(x, y, lambda,
           ( rsL2 / 2 ) * as.double(crossprod(beta))
 
         r.sum <- (as.double(crossprod(v)) / 2 + (c - sc)^2) / 2
-        l.sum <- fun.beta - fun.s - as.double(crossprod(v, g)) - (c - sc) * gc
+        #l.sum <- fun.beta - fun.s - as.double(crossprod(v, g)) - (c - sc) * gc
+        fzp.gamma <- fun.s + as.double(crossprod(v, g)) + (c - sc) * gc + L * r.sum
         
         
         if (r.sum <= 1e-18) {
@@ -356,10 +357,12 @@ fusedLogisticR <- function(x, y, lambda,
         ## the condition is fun.beta <= fun.s + v'* g + c * gc
         ##                           + L/2 * (v'*v + (c-sc)^2 )
         
-        if (l.sum <= r.sum * L) {
+        #if (l.sum <= r.sum * L) {
+        if (fun.beta <= fzp.gamma) {
           break
         } else {
-          L <- max(2 * L, l.sum / r.sum)
+          #L <- max(2 * L, l.sum / r.sum)
+          L <- 2 * L
         }
         
       } # end while loop
