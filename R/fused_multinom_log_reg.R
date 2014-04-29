@@ -28,7 +28,7 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
   
   
   # if groups are given, get unique groups
-  fused.mat <- 
+  
   if (!is.null(groups)) {
     unique.groups <- vector(mode = "list", length = K)
     if (is.list(groups)) {
