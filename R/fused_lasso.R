@@ -42,7 +42,8 @@
 #' res <- fusedlasso(x, y1, lambda.lasso = 0.005, lambda.fused = 0.01, family = "binomial")
 #' round(res$beta, 5)
 fusedlasso <- function(x, y, weights = rep(1, nrow(x)), 
-                       lambda.lasso = 0, lambda.fused = 0, groups = NULL,
+                       lambda.lasso = 0, lambda.fused = 0, 
+                       lambda.group = 0, groups = NULL,
                        family = c("gaussian", "binomial", "multinomial"), 
                        opts = NULL, class.weights = NULL) {
   
@@ -72,6 +73,7 @@ fusedlasso <- function(x, y, weights = rep(1, nrow(x)),
                           class.weights = class.weights, opts = opts)
   } else if (family == "multinomial") {
     res <- fusedMultinomialLogistic(x = x.tilde, y, lambda = lambda.lasso, 
+                                    lambda.group = lambda.group,
                                     groups = groups, opts = opts)
   }
   res

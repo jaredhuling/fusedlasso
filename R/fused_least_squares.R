@@ -244,7 +244,26 @@ fusedLeastR <- function(x, y, lambda, groups = NULL, opts=NULL) {
             
             res <- flsa(v[gr.idx], z0[gr.idx.z], lambda / L, lambda2 / L, gr.p,
                         1000, 1e-8, 1, 6)
-            b[gr.idx] <- res[[1]]
+            
+            if (lambda.group > 0) {
+              ## 2nd Projection:
+              ## argmin_w { 0.5 \|w - w_1\|_2^2
+              ##          + lambda_3 * \|w_1\|_2 }
+              ## This is a simple thresholding:
+              ##    w_2 = max(\|w_1\|_2 - \lambda_3, 0)/\|w_1\|_2 * w_1
+              nm = norm(res[[1]], type = "2")
+              if (nm == 0) {
+                newbeta = numeric(length(res[[1]]))
+              } else {
+                #apply soft thresholding, adjust penalty for size of group
+                newbeta = pmax(nm - lambda.group * sqrt(gr.p), 0) / nm * res[[1]]
+              }
+              end
+            } else {
+              newbeta <- res[[1]]
+            }
+            
+            beta[gr.idx, k] <- newbeta
             z0[gr.idx.z] <- res[[2]]
             infor <- res[[3]]
           }
@@ -296,8 +315,20 @@ fusedLeastR <- function(x, y, lambda, groups = NULL, opts=NULL) {
       bbp <- b - bp
       xby <- xb - y
       
+      # evaluate fused and group lasso 
+      # penalty-terms
+      fused.pen <- group.pen <- 0
+      for (t in 1:length(unique.groups)) {
+        gr.idx <- which(groups == unique.groups[t])
+        gr.p <- length(gr.idx)
+        if (gr.p > 1) {
+          fused.pen <- fused.pen + sum(abs(beta[gr.idx[2:(gr.p)]] - beta[gr.idx[1:(gr.p - 1)]]))
+          group.pen <- group.pen + sqrt(sum(beta[gr.idx] ^ 2) * gr.p)
+        }
+      }
+      
       funVal[iterStep] <- as.double(crossprod(xby)) / 2 + 
-        sum(abs(b)) * lambda + lambda2 * sum(abs( b[2:p] - b[1:(p-1)] ))
+        sum(abs(b)) * lambda + lambda2 * fused.pen + lambda.group * group.pen
 
       
       if (bFlag) {

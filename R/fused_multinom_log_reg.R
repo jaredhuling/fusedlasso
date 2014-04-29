@@ -1,4 +1,5 @@
-fusedMultinomialLogistic <- function(x, y, lambda, lambda.group = 0, groups = NULL, 
+fusedMultinomialLogistic <- function(x, y, lambda, 
+                                     lambda.group = 0, groups = NULL, 
                                      class.weights = NULL, opts=NULL) {
   
   sz <- dim(x)
@@ -441,13 +442,17 @@ fusedMultinomialLogistic <- function(x, y, lambda, lambda.group = 0, groups = NU
       betabetap <- beta - betap
       ccp <- c - cp
       
+      # evaluate fused and group lasso 
+      # penalty-terms
       fused.pen <- group.pen <- 0
-      for (t in 1:length(unique.groups[[k]])) {
-        gr.idx <- which(groups[[k]] == unique.groups[[k]][t])
-        gr.p <- length(gr.idx)
-        if (gr.p > 1) {
-          fused.pen <- fused.pen + sum(abs(beta[gr.idx[2:(gr.p)], k] - beta[gr.idx[1:(gr.p - 1)], k]))
-          group.pen <- group.pen + sqrt(sum(beta[gr.idx, k] ^ 2) * gr.p)
+      for (k in 1:K) {
+        for (t in 1:length(unique.groups[[k]])) {
+          gr.idx <- which(groups[[k]] == unique.groups[[k]][t])
+          gr.p <- length(gr.idx)
+          if (gr.p > 1) {
+            fused.pen <- fused.pen + sum(abs(beta[gr.idx[2:(gr.p)], k] - beta[gr.idx[1:(gr.p - 1)], k]))
+            group.pen <- group.pen + sqrt(sum(beta[gr.idx, k] ^ 2) * gr.p)
+          }
         }
       }
       
