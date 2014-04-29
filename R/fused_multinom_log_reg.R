@@ -378,7 +378,7 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
                 ##          + lambda_3 * \|w_1\|_2 }
                 ## This is a simple thresholding:
                 ##    w_2 = max(\|w_1\|_2 - \lambda_3, 0)/\|w_1\|_2 * w_1
-                nm = norm(res[[1]], 2)
+                nm = norm(res[[1]], type = "2")
                 if (nm == 0) {
                   newbeta = numeric(length(res[[1]]))
                 } else {
