@@ -18,10 +18,13 @@ fusedLeastR <- function(x, y, lambda, lambda.group = 0, groups = NULL, opts=NULL
   n <- sz[1]
   p <- sz[2]
 
-  stopifnot(lambda > 0)
+  stopifnot(lambda > 0 && lambda.group >= 0)
   
   # run sllOpts to set default values (flags)
   opts <- sllOpts(opts)
+  if (lambda.group > 0) {
+    opts$tol <- 1e-10
+  }
   
   # if groups are given, get unique groups
   if (!is.null(groups)) {

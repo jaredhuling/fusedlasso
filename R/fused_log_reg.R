@@ -12,6 +12,8 @@ fusedLogisticR <- function(x, y, lambda,
     stop("y must be in {-1, 1}")
   }
   
+  
+  
   # if groups are given, get unique groups
   if (!is.null(groups)) {
     unique.groups <- sort(unique(groups[!is.na(groups)]))
@@ -19,6 +21,9 @@ fusedLogisticR <- function(x, y, lambda,
   
   # run sllOpts to set default values (flags)
   opts <- sllOpts(opts)
+  if (lambda.group > 0) {
+    opts$tol <- 1e-10
+  }
   
   ## Set up options
   if (opts$nFlag != 0) {
@@ -258,7 +263,7 @@ fusedLogisticR <- function(x, y, lambda,
         
         if (is.null(groups)) {
           res <- flsa(v, z0, lambda / L, lambda2 / L, p,
-                      1000, 1e-15, 1, 6)
+                      1000, 1e-9, 1, 6)
           beta <- res[[1]]
           z0 <- res[[2]]
           infor <- res[[3]]
@@ -276,7 +281,7 @@ fusedLogisticR <- function(x, y, lambda,
             }
             
             res <- flsa(v[gr.idx], z0[gr.idx.z], lambda / L, 0, gr.p,
-                        1000, 1e-15, 1, 6)
+                        1000, 1e-9, 1, 6)
             
             beta[gr.idx] <- res[[1]]
             z0[gr.idx.z] <- res[[2]]
@@ -293,7 +298,7 @@ fusedLogisticR <- function(x, y, lambda,
             }
             
             res <- flsa(v[gr.idx], z0[gr.idx.z], lambda / L, lambda2 / L, gr.p,
-                        1000, 1e-15, 1, 6)
+                        1000, 1e-9, 1, 6)
             
             if (lambda.group > 0) {
               ## 2nd Projection:
