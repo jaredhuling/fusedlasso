@@ -41,7 +41,7 @@ fusedMultinomialLogistic <- function(x, y, lambda,
         unique.groups[[k]] <- sort(unique(groups[!is.na(groups[[k]])]))
       }
     } else {
-      unique.groups[1:K] <- sort(unique(groups[!is.na(groups)]))
+      unique.groups[1:K] <- rep(list(sort(unique(groups[!is.na(groups)]))), K)
       gr.list <- vector(mode = "list", length = K)
       gr.list[1:K] <- rep(list(groups), K)
       groups <- gr.list
