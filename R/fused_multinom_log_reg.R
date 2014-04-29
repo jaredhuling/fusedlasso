@@ -464,7 +464,7 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
         ## the condition is fun.beta <= fun.s + v'* g + c * gc
         ##                           + L/2 * (v'*v + (c-sc)^2 )
         
-        if (fun.beta <= fzp.gamma | funval.s - funval < diff.prev) {
+        if (fun.beta <= fzp.gamma ) { #| funval.s - funval < diff.prev
           break
         } else {
           #L <- max(2 * L, (fun.beta * L) / fzp.gamma)
