@@ -59,6 +59,7 @@ fusedlasso <- function(x, y, weights = rep(1, nrow(x)),
   opts$fusedPenalty <- lambda.fused
   
   if (family == "gaussian") {
+    opts$rFlag <- 1
     res <- fusedLeastR(x = x.tilde, y = sqrt(weights) * y, 
                        lambda = lambda.lasso, 
                        lambda.group = lambda.group,
