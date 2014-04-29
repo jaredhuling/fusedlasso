@@ -61,6 +61,7 @@ fusedlasso <- function(x, y, weights = rep(1, nrow(x)),
   if (family == "gaussian") {
     res <- fusedLeastR(x = x.tilde, y = sqrt(weights) * y, 
                        lambda = lambda.lasso, 
+                       lambda.group = lambda.group,
                        groups = groups, opts = opts)
     res$intercept <- mean(sqrt(weights) * y)
   } else if (family == "binomial") {
@@ -70,6 +71,7 @@ fusedlasso <- function(x, y, weights = rep(1, nrow(x)),
     }
     
     res <- fusedLogisticR(x = x.tilde, y, lambda = lambda.lasso, 
+                          lambda.group = lambda.group, groups = groups,
                           class.weights = class.weights, opts = opts)
   } else if (family == "multinomial") {
     res <- fusedMultinomialLogistic(x = x.tilde, y, lambda = lambda.lasso, 

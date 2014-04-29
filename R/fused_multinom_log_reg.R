@@ -442,22 +442,27 @@ fusedMultinomialLogistic <- function(x, y, lambda,
       betabetap <- beta - betap
       ccp <- c - cp
       
+      
       # evaluate fused and group lasso 
       # penalty-terms
-      fused.pen <- group.pen <- 0
-      for (k in 1:K) {
-        for (t in 1:length(unique.groups[[k]])) {
-          gr.idx <- which(groups[[k]] == unique.groups[[k]][t])
-          gr.p <- length(gr.idx)
-          if (gr.p > 1) {
-            fused.pen <- fused.pen + sum(abs(beta[gr.idx[2:(gr.p)], k] - beta[gr.idx[1:(gr.p - 1)], k]))
-            group.pen <- group.pen + sqrt(sum(beta[gr.idx, k] ^ 2) * gr.p)
+      if (!is.null(groups)) {
+        fused.pen <- group.pen <- 0
+        for (k in 1:K) {
+          for (t in 1:length(unique.groups[[k]])) {
+            gr.idx <- which(groups[[k]] == unique.groups[[k]][t])
+            gr.p <- length(gr.idx)
+            if (gr.p > 1) {
+              fused.pen <- fused.pen + sum(abs(beta[gr.idx[2:(gr.p)], k] - beta[gr.idx[1:(gr.p - 1)], k]))
+              group.pen <- group.pen + sqrt(sum(beta[gr.idx, k] ^ 2) * gr.p)
+            }
           }
         }
+        pens <- lambda2 * fused.pen + lambda.group * group.pen
+      } else {
+        pens <- lambda2 * sum(abs(beta[2:p] - beta[1:(p-1)]))
       }
       
-      funVal[iterStep] <- fun.beta + lambda * sum(abs(beta)) +
-        lambda2 * fused.pen + lambda.group * group.pen
+      funVal[iterStep] <- fun.beta + lambda * sum(abs(beta)) + pens
       
       if (bFlag) {
         break

@@ -317,18 +317,23 @@ fusedLeastR <- function(x, y, lambda, groups = NULL, opts=NULL) {
       
       # evaluate fused and group lasso 
       # penalty-terms
-      fused.pen <- group.pen <- 0
-      for (t in 1:length(unique.groups)) {
-        gr.idx <- which(groups == unique.groups[t])
-        gr.p <- length(gr.idx)
-        if (gr.p > 1) {
-          fused.pen <- fused.pen + sum(abs(beta[gr.idx[2:(gr.p)]] - beta[gr.idx[1:(gr.p - 1)]]))
-          group.pen <- group.pen + sqrt(sum(beta[gr.idx] ^ 2) * gr.p)
+      if (!is.null(groups)) {
+        fused.pen <- group.pen <- 0
+        for (t in 1:length(unique.groups)) {
+          gr.idx <- which(groups == unique.groups[t])
+          gr.p <- length(gr.idx)
+          if (gr.p > 1) {
+            fused.pen <- fused.pen + sum(abs(beta[gr.idx[2:(gr.p)]] - beta[gr.idx[1:(gr.p - 1)]]))
+            group.pen <- group.pen + sqrt(sum(beta[gr.idx] ^ 2) * gr.p)
+          }
         }
+        pens <- lambda2 * fused.pen + lambda.group * group.pen
+      } else {
+        pens <- lambda2 * sum(abs(beta[2:p] - beta[1:(p-1)]))
       }
       
-      funVal[iterStep] <- as.double(crossprod(xby)) / 2 + 
-        sum(abs(b)) * lambda + lambda2 * fused.pen + lambda.group * group.pen
+      funVal[iterStep] <- as.double(crossprod(xby)) / 2 + lambda * sum(abs(b)) + pens
+
 
       
       if (bFlag) {
