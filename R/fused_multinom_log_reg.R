@@ -262,8 +262,6 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
       
       #aa <- -y.k * (xs + sc)
       aa <- (xs + rep(sc, each = n))
-      print("aa")
-      print(aa[1:10,])
       
       # fun.s is the logistic loss at the search point
       bb <- pmax(- y.mat * aa, 0)
@@ -296,23 +294,14 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
         ( rsL2 / 2 ) * sum(as.double(crossprod(s)))
       
       prob <- prob / rSp
-      
-      print("prob")
-      print(prob[1:10,])
-      
+
       #b <- -weighty * (1 - prob)
       b <- -((y.mat+1)/2 - prob) * weight
-      
-      print("b")
-      print(b[1:10,])
-      
+
       #the gradient of c
       #gc <- (colSums(y.mat+1)/(2) - 1) / n
       gc <- colSums(b)
-      
-      print("gc")
-      print(gc)
-      
+
       #  should be sum i=1:n { sum k=1:K {y_i^(k)} - p_ij} 
       
       #compute g= xT b, the gradient of beta
@@ -326,10 +315,7 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
       }
       #add the squared L2 norm regularization term
       g <- g + rsL2 * s
-      
-      print("g")
-      print(g)
-      
+
       #assignments
       betap <- beta
       xbetap <- xbeta
@@ -340,14 +326,7 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
         # and then do the Lq/L1-norm regularized projection
         v <- s - g / L
         c <- sc - gc / L
-        
-        print("g")
-        print(g)
-        print("v")
-        print(v); print("z0")
-        print(z0)
-        
-        
+
         for (k in 1:K) {
           if (is.null(groups)) {
             res <- flsa(v[, k], z0[, k], lambda / L, lambda2 / L, p,
@@ -392,17 +371,11 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
             }
           }
         } #end loop over classes
-        
-        print("beta")
-        print(beta[1:15,])
-        
+
         # the difference between the new approximate 
         # solution x and the search point s
         v <- beta - s
-        
-        print("s")
-        print(s[1:15,])
-        
+
         ## Compute x beta
         if (opts$nFlag == 0) {
           xbeta <- x %*% beta
