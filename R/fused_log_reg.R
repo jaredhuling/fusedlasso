@@ -1,5 +1,7 @@
 
-fusedLogisticR <- function(x, y, lambda, class.weights = NULL, opts=NULL) {
+fusedLogisticR <- function(x, y, lambda, 
+                           lambda.group = 0, groups = NULL,
+                           class.weights = NULL, opts=NULL) {
   
   sz <- dim(x)
   n <- sz[1]
@@ -8,6 +10,11 @@ fusedLogisticR <- function(x, y, lambda, class.weights = NULL, opts=NULL) {
   stopifnot(lambda > 0)
   if ( any(sort(unique(y)) != c(-1, 1)) ) {
     stop("y must be in {-1, 1}")
+  }
+  
+  # if groups are given, get unique groups
+  if (!is.null(groups)) {
+    unique.groups <- sort(unique(groups[!is.na(groups)]))
   }
   
   # run sllOpts to set default values (flags)
@@ -248,11 +255,68 @@ fusedLogisticR <- function(x, y, lambda, class.weights = NULL, opts=NULL) {
         v <- s - g / L
         c <- sc - gc / L
         
-        res <- flsa(v, z0, lambda / L, lambda2 / L, p,
-                    1000, 1e-8, 1, 6)
-        beta <- res[[1]]
-        z0 <- res[[2]]
-        infor <- res[[3]]
+        
+        if (is.null(groups)) {
+          res <- flsa(v, z0, lambda / L, lambda2 / L, p,
+                      1000, 1e-8, 1, 6)
+          b <- res[[1]]
+          z0 <- res[[2]]
+          infor <- res[[3]]
+        } else {
+          
+          if (any(is.na(groups))) {
+            ## don't apply fused lasso penalty
+            ## to variables with group == NA 
+            gr.idx <- which(is.na(groups))
+            gr.p <- length(gr.idx)
+            if (any(gr.idx == 1)) {
+              gr.idx.z <- gr.idx[gr.idx != 1] - 1
+            } else {
+              gr.idx.z <- gr.idx[-gr.p]
+            }
+            
+            res <- flsa(v[gr.idx], z0[gr.idx.z], lambda / L, 0, gr.p,
+                        1000, 1e-8, 1, 6)
+            b[gr.idx] <- res[[1]]
+            z0[gr.idx.z] <- res[[2]]
+            infor <- res[[3]]
+          }
+          
+          for (t in 1:length(unique.groups)) {
+            gr.idx <- which(groups == unique.groups[t])
+            gr.p <- length(gr.idx)
+            if (any(gr.idx == 1)) {
+              gr.idx.z <- gr.idx[gr.idx != 1] - 1
+            } else {
+              gr.idx.z <- gr.idx[-gr.p]
+            }
+            
+            res <- flsa(v[gr.idx], z0[gr.idx.z], lambda / L, lambda2 / L, gr.p,
+                        1000, 1e-8, 1, 6)
+            
+            if (lambda.group > 0) {
+              ## 2nd Projection:
+              ## argmin_w { 0.5 \|w - w_1\|_2^2
+              ##          + lambda_3 * \|w_1\|_2 }
+              ## This is a simple thresholding:
+              ##    w_2 = max(\|w_1\|_2 - \lambda_3, 0)/\|w_1\|_2 * w_1
+              nm = norm(res[[1]], type = "2")
+              if (nm == 0) {
+                newbeta = numeric(length(res[[1]]))
+              } else {
+                #apply soft thresholding, adjust penalty for size of group
+                newbeta = pmax(nm - lambda.group * sqrt(gr.p), 0) / nm * res[[1]]
+              }
+              end
+            } else {
+              newbeta <- res[[1]]
+            }
+            
+            beta[gr.idx, k] <- newbeta
+            z0[gr.idx.z] <- res[[2]]
+            infor <- res[[3]]
+          }
+        }
         
         # the difference between the new approximate 
         # solution x and the search point s
@@ -310,8 +374,20 @@ fusedLogisticR <- function(x, y, lambda, class.weights = NULL, opts=NULL) {
       betabetap <- beta - betap
       ccp <- c - cp
       
+      # evaluate fused and group lasso 
+      # penalty-terms
+      fused.pen <- group.pen <- 0
+      for (t in 1:length(unique.groups)) {
+        gr.idx <- which(groups == unique.groups[t])
+        gr.p <- length(gr.idx)
+        if (gr.p > 1) {
+          fused.pen <- fused.pen + sum(abs(beta[gr.idx[2:(gr.p)]] - beta[gr.idx[1:(gr.p - 1)]]))
+          group.pen <- group.pen + sqrt(sum(beta[gr.idx] ^ 2) * gr.p)
+        }
+      }
+      
       funVal[iterStep] <- fun.beta + lambda * sum(abs(beta)) +
-        lambda2 * sum(abs(beta[2:p] - beta[1:(p-1)]))
+        lambda2 * fused.pen + lambda.group * group.pen
       
       if (bFlag) {
         break
