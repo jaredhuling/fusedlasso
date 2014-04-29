@@ -258,7 +258,7 @@ fusedLogisticR <- function(x, y, lambda,
         
         if (is.null(groups)) {
           res <- flsa(v, z0, lambda / L, lambda2 / L, p,
-                      1000, 1e-8, 1, 6)
+                      1000, 1e-9, 1, 6)
           beta <- res[[1]]
           z0 <- res[[2]]
           infor <- res[[3]]
@@ -276,7 +276,7 @@ fusedLogisticR <- function(x, y, lambda,
             }
             
             res <- flsa(v[gr.idx], z0[gr.idx.z], lambda / L, 0, gr.p,
-                        1000, 1e-8, 1, 6)
+                        1000, 1e-9, 1, 6)
             
             beta[gr.idx] <- res[[1]]
             z0[gr.idx.z] <- res[[2]]
@@ -293,7 +293,7 @@ fusedLogisticR <- function(x, y, lambda,
             }
             
             res <- flsa(v[gr.idx], z0[gr.idx.z], lambda / L, lambda2 / L, gr.p,
-                        1000, 1e-8, 1, 6)
+                        1000, 1e-9, 1, 6)
             
             if (lambda.group > 0) {
               ## 2nd Projection:
