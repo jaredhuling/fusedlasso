@@ -430,12 +430,8 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
         #l.sum <- fun.beta - fun.s - (as.double(sum(diag(crossprod(v, g))))) - sum((c - sc) * gc)
         
         #l.sum <- fun.beta - fun.s; r.sum <- 1e-10
-        #cat("r.sum: ", r.sum, "l.sum: ", l.sum, "fun.beta: ", fun.beta, "fun.s: ", fun.s, " L: ", L)
-        
-        
-        
-        cat("r.sum: ", fzp.gamma, "l.sum: ", fun.beta, "fun.s: ", fun.s, " L: ", L)
-        
+
+
         if (r.sum <= 1e-18) {
           #this shows that the gradient step makes little improvement
           bFlag <- 1
