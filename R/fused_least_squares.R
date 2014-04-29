@@ -94,6 +94,7 @@ fusedLeastR <- function(x, y, lambda, lambda.group = 0, groups = NULL, opts=NULL
     
     lambda.max <- max(abs(xTy))
     lambda <- lambda * lambda.max
+    lambda.group <- lambda.group * lambda.max
     
     if (is.null(opts$fusedPenalty)) {
       lambda2 <- 0
