@@ -459,17 +459,18 @@ fusedMultinomialLogistic <- function(x, y, lambda, lambda.group = 0, groups = NU
       betabetap <- beta - betap
       ccp <- c - cp
       
-      fused.pen <- 0
+      fused.pen <- group.pen <- 0
       for (t in 1:length(unique.groups[[k]])) {
         gr.idx <- which(groups[[k]] == unique.groups[[k]][t])
         gr.p <- length(gr.idx)
         if (gr.p > 1) {
-          fused.pen <- fused.pen + sum(abs(beta[gr.idx[2:(gr.p)],k] - beta[gr.idx[1:(gr.p - 1)],k]))
+          fused.pen <- fused.pen + sum(abs(beta[gr.idx[2:(gr.p)], k] - beta[gr.idx[1:(gr.p - 1)], k]))
+          group.pen <- group.pen + sqrt(sum(beta[gr.idx, k] ^ 2))
         }
       }
       
       funVal[iterStep] <- fun.beta + lambda * sum(abs(beta)) +
-        lambda2 * fused.pen
+        lambda2 * fused.pen + lambda.group * group.pen
       
       if (bFlag) {
         break
