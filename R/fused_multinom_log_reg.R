@@ -1,4 +1,4 @@
-fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL, 
+fusedMultinomialLogistic <- function(x, y, lambda, lambda.group = 0, groups = NULL, 
                                      class.weights = NULL, opts=NULL) {
   
   sz <- dim(x)
