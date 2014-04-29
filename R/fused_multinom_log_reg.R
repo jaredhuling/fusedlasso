@@ -446,7 +446,7 @@ fusedMultinomialLogistic <- function(x, y, lambda, groups = NULL,
         funval <- fun.beta + lambda * sum(abs(beta)) +
           lambda2 * fused.pen
         
-        r.sum <- norm(v, type = "F") ^ 2 + sum((c - sc)^2) / 2
+        r.sum <- norm(v, type = "F") ^ 2 / 2 + sum((c - sc)^2) / 2
         #fzp.gamma <- fun.s + sum(sum(v * g)) + (L / 2) * r.sum + sum((c - sc) * gc) + L * sum((c - sc)^2) / 2
         fzp.gamma <- fun.s + sum(sum(v * g)) + L * r.sum + sum((c - sc) * gc)
         #r.sum <- (as.double(sum(diag(crossprod(v)))) + sum((c - sc)^2)) / 2
