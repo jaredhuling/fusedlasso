@@ -334,28 +334,9 @@ fusedMultinomialLogistic <- function(x, y, lambda, lambda.group = 0, groups = NU
               }
               
               res <- flsa(v[gr.idx, k], z0[gr.idx.z, k], lambda / L, 0, gr.p,
-                          1000, 1e-8, 1, 6)
+                          1000, 1e-8, 1, 6)            
               
-              
-              if (lambda.group > 0) {
-                ## 2nd Projection:
-                ## argmin_w { 0.5 \|w - w_1\|_2^2
-                ##          + lambda_3 * \|w_1\|_2 }
-                ## This is a simple thresholding:
-                ##    w_2 = max(\|w_1\|_2 - \lambda_3, 0)/\|w_1\|_2 * w_1
-                nm = norm(res[[1]], type = "2")
-                if (nm == 0) {
-                  newbeta = numeric(length(res[[1]]))
-                } else {
-                  newbeta = pmax(nm - lambda.group, 0) / nm * res[[1]]
-                }
-                end
-              } else {
-                newbeta <- res[[1]]
-              }
-              
-              
-              beta[gr.idx, k] <- newbeta
+              beta[gr.idx, k] <- res[[1]]
               z0[gr.idx.z, k] <- res[[2]]
               infor <- res[[3]]
             }
