@@ -323,13 +323,13 @@ fusedLeastR <- function(x, y, lambda, lambda.group = 0, groups = NULL, opts=NULL
           gr.idx <- which(groups == unique.groups[t])
           gr.p <- length(gr.idx)
           if (gr.p > 1) {
-            fused.pen <- fused.pen + sum(abs(beta[gr.idx[2:(gr.p)]] - beta[gr.idx[1:(gr.p - 1)]]))
-            group.pen <- group.pen + sqrt(sum(beta[gr.idx] ^ 2) * gr.p)
+            fused.pen <- fused.pen + sum(abs(b[gr.idx[2:(gr.p)]] - b[gr.idx[1:(gr.p - 1)]]))
+            group.pen <- group.pen + sqrt(sum(b[gr.idx] ^ 2) * gr.p)
           }
         }
         pens <- lambda2 * fused.pen + lambda.group * group.pen
       } else {
-        pens <- lambda2 * sum(abs(beta[2:p] - beta[1:(p-1)]))
+        pens <- lambda2 * sum(abs(b[2:p] - b[1:(p-1)]))
       }
       
       funVal[iterStep] <- as.double(crossprod(xby)) / 2 + lambda * sum(abs(b)) + pens
