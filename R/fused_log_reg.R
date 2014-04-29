@@ -312,7 +312,7 @@ fusedLogisticR <- function(x, y, lambda,
               newbeta <- res[[1]]
             }
             
-            beta[gr.idx, k] <- newbeta
+            beta[gr.idx] <- newbeta
             z0[gr.idx.z] <- res[[2]]
             infor <- res[[3]]
           }
