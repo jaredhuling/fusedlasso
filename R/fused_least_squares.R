@@ -87,7 +87,6 @@ fusedLeastR <- function(x, y, lambda, lambda.group = 0, groups = NULL, opts=NULL
       lambda2 <- opts$fusedPenalty * n
     }
     lambda <- lambda * n
-    lambda.group <- lambda.group * n
   } else {
     # lambda here is the scaling factor lying in [0,1]
     if (lambda < 0 || lambda > 1) {
