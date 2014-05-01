@@ -188,7 +188,7 @@ fusedLeastR <- function(x, y, lambda, lambda.group = 0, groups = NULL, opts=NULL
       ##  line search for L and compute the new approximate solution x
       
       ## compute the gradient (g) at s
-      xs <- xb + beta * (xb - xbp)
+      xs <- (xb + beta * (xb - xbp)) / n
       
       ## compute xT, xs
       if (opts$nFlag == 0) {
@@ -201,7 +201,7 @@ fusedLeastR <- function(x, y, lambda, lambda.group = 0, groups = NULL, opts=NULL
       }
       
       ## obtain the gradient g
-      g <- xTxs - xTy
+      g <- (xTxs - xTy) / n
       
       ## copy b and xb to bp and xbp
       bp <- b; xbp <- xb
