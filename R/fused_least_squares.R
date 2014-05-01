@@ -71,7 +71,7 @@ fusedLeastR <- function(x, y, lambda, lambda.group = 0, groups = NULL, opts=NULL
   
   ## compute X'y
   if (opts$nFlag == 0) {
-    xTy <- crossprod(x, y) / n
+    xTy <- crossprod(x, y)
   } else if (opts$nFlag == 1) {
     xTy <- (crossprod(x, y) - sum(y) * mu) / nu
   } else {
@@ -84,8 +84,10 @@ fusedLeastR <- function(x, y, lambda, lambda.group = 0, groups = NULL, opts=NULL
     if (is.null(opts$fusedPenalty)) {
       lambda2 <- 0
     } else {
-      lambda2 <- opts$fusedPenalty
+      lambda2 <- opts$fusedPenalty * n
     }
+    lambda <- lambda * n
+    lambda.group <- lambda.group * n
   } else {
     # lambda here is the scaling factor lying in [0,1]
     if (lambda < 0 || lambda > 1) {
@@ -188,7 +190,7 @@ fusedLeastR <- function(x, y, lambda, lambda.group = 0, groups = NULL, opts=NULL
       ##  line search for L and compute the new approximate solution x
       
       ## compute the gradient (g) at s
-      xs <- (xb + beta * (xb - xbp)) / n
+      xs <- xb + beta * (xb - xbp)
       
       ## compute xT, xs
       if (opts$nFlag == 0) {
@@ -336,7 +338,7 @@ fusedLeastR <- function(x, y, lambda, lambda.group = 0, groups = NULL, opts=NULL
         pens <- lambda2 * sum(abs(b[2:p] - b[1:(p-1)]))
       }
       
-      funVal[iterStep] <- as.double(crossprod(xby)) / (2 * n) + lambda * sum(abs(b)) + pens
+      funVal[iterStep] <- as.double(crossprod(xby)) / (2) + lambda * sum(abs(b)) + pens
 
 
       
