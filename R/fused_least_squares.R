@@ -332,7 +332,7 @@ fusedLeastR <- function(x, y, lambda, lambda.group = 0, groups = NULL, opts=NULL
             group.pen <- group.pen + sqrt(sum(b[gr.idx] ^ 2) * gr.p)
           }
         }
-        pens <- lambda2 * fused.pen + lambda.group * group.pen
+        pens <- lambda2 * fused.pen + lambda.group * group.pen / n
       } else {
         pens <- lambda2 * sum(abs(b[2:p] - b[1:(p-1)]))
       }
