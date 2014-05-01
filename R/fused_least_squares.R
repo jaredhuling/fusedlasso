@@ -262,7 +262,7 @@ fusedLeastR <- function(x, y, lambda, lambda.group = 0, groups = NULL, opts=NULL
                 newbeta = numeric(length(res[[1]]))
               } else {
                 #apply soft thresholding, adjust penalty for size of group
-                newbeta = pmax(nm - lambda.group * sqrt(gr.p), 0) / nm * res[[1]]
+                newbeta = (pmax(nm - lambda.group * sqrt(gr.p), 0) / nm) * res[[1]]
               }
               end
             } else {
