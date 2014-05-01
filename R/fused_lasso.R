@@ -48,11 +48,11 @@ fusedlasso <- function(x, y, weights = rep(1, nrow(x)),
                        opts = NULL, class.weights = NULL) {
   
   family <- match.arg(family)
-  colM <- colMeans(sqrt(weights) * x)
+  colM <- colMeans(x)
   p <- ncol(x)
   n <- nrow(x)
 
-  x.tilde <- sqrt(weights) * x - matrix(rep(colM, n), ncol=p, byrow=TRUE)
+  x.tilde <- x - matrix(rep(colM, n), ncol=p, byrow=TRUE)
   if (is.null(opts)) {
     opts <- sllOpts()
   }
@@ -60,7 +60,8 @@ fusedlasso <- function(x, y, weights = rep(1, nrow(x)),
   
   if (family == "gaussian") {
     opts$rFlag <- 0
-    res <- fusedLeastR(x = x.tilde, y = sqrt(weights) * y, 
+    res <- fusedLeastR(x = sqrt(weights) * x.tilde, 
+                       y = sqrt(weights) * y, 
                        lambda = lambda.lasso, 
                        lambda.group = lambda.group,
                        groups = groups, opts = opts)
