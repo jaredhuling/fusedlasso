@@ -71,7 +71,7 @@ fusedLeastR <- function(x, y, lambda, lambda.group = 0, groups = NULL, opts=NULL
   
   ## compute X'y
   if (opts$nFlag == 0) {
-    xTy <- crossprod(x, y)
+    xTy <- crossprod(x, y) / n
   } else if (opts$nFlag == 1) {
     xTy <- (crossprod(x, y) - sum(y) * mu) / nu
   } else {
@@ -201,7 +201,7 @@ fusedLeastR <- function(x, y, lambda, lambda.group = 0, groups = NULL, opts=NULL
       }
       
       ## obtain the gradient g
-      g <- (xTxs - xTy) / n
+      g <- (xTxs - xTy)
       
       ## copy b and xb to bp and xbp
       bp <- b; xbp <- xb
